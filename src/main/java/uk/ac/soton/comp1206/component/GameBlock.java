@@ -90,7 +90,7 @@ public class GameBlock extends Canvas {
     }
 
     /**
-     * When the value of this block is updated,
+     * When the value of this block is updated.
      * @param observable what was updated
      * @param oldValue the old value
      * @param newValue the new value
