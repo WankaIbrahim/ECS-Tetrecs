@@ -10,10 +10,9 @@ import uk.ac.soton.comp1206.game.Grid;
 /**
  * A GameBoard is a visual component to represent the visual GameBoard.
  * It extends a GridPane to hold a grid of GameBlocks.
- *
- * The GameBoard can hold an internal grid of it's own, for example, for displaying an upcoming block. It also be
- * linked to an external grid, for the main game board.
- *
+ * The GameBoard can hold an internal grid of its own, for example,
+ * for displaying an upcoming block.
+ * It will also be linked to an external grid for the main game board.
  * The GameBoard is only a visual representation and should not contain game logic or model logic in it, which should
  * take place in the Grid.
  */
@@ -75,7 +74,8 @@ public class GameBoard extends GridPane {
     }
 
     /**
-     * Create a new GameBoard with it's own internal grid, specifying the number of columns and rows, along with the
+     * Create a new GameBoard with its own internal grid,
+     * specifying the number of columns and rows, along with the
      * visual width and height.
      *
      * @param cols number of columns for internal grid
@@ -95,7 +95,7 @@ public class GameBoard extends GridPane {
     }
 
     /**
-     * Get a specific block from the GameBoard, specified by it's row and column
+     * Get a specific block from the GameBoard, specified by its row and column
      * @param x column
      * @param y row
      * @return game block at the given column and row

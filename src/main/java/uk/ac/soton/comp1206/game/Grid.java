@@ -2,19 +2,23 @@ package uk.ac.soton.comp1206.game;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * The Grid is a model which holds the state of a game board. It is made up of a set of Integer values arranged in a 2D
- * arrow, with rows and columns.
- *
- * Each value inside the Grid is an IntegerProperty can be bound to enable modification and display of the contents of
+ * The Grid is a model that holds the state of a game board.
+ * It is made up of a set of Integer values arranged in a 2D
+ * array, with rows and columns.
+ * Each value inside the Grid is an IntegerProperty can be bound
+ * to enable modification and display the contents of
  * the grid.
- *
- * The Grid contains functions related to modifying the model, for example, placing a piece inside the grid.
- *
- * The Grid should be linked to a GameBoard for it's display.
+ * The Grid contains functions related to modifying the model,
+ * for example, placing a piece inside the grid.
+ * The Grid should be linked to a GameBoard for its display.
  */
 public class Grid {
+
+    private static final Logger logger = LogManager.getLogger(Grid.class);
 
     /**
      * The number of columns in this grid
@@ -32,7 +36,7 @@ public class Grid {
     private final SimpleIntegerProperty[][] grid;
 
     /**
-     * Create a new Grid with the specified number of columns and rows and initialise them
+     * Create a new Grid with the specified number of columns and rows and initialize them
      * @param cols number of columns
      * @param rows number of rows
      */
@@ -101,6 +105,58 @@ public class Grid {
      */
     public int getRows() {
         return rows;
+    }
+
+    /**
+     * Checks whether a piece can be played or not
+     * @param piece The piece to be checked
+     * @param placeX The x coordinate of the piece
+     * @param placeY The y coordinate of the piece
+     * @return True if a piece can be played
+     */
+    public boolean canPlayPiece(GamePiece piece, int placeX, int placeY){
+        logger.info("Checking if piece {} can be played at {} {}", piece, placeX, placeY);
+
+
+        int[][] blocks = piece.getBlocks();
+        for(var blockX = 0; blockX < blocks.length; blockX++){
+            for(var blockY = 0; blockY < blocks.length; blockY++){
+                var blockValue = blocks[blockX][blockX];
+                if(blockValue>0) {
+                    var gridValue = get(placeX + blockX -1, placeY + blockY -1);
+                    if(gridValue!=0){
+                        logger.error("Unable to place piece: {} at {} {}", piece, blockX, blockY);
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Play a piece on the grid by updating it value
+     * @param piece The piece to be played
+     * @param placeX The x coordinate of the piece
+     * @param placeY The y coordinate of the piece to be played
+     */
+    public void playPiece(GamePiece piece, int placeX, int placeY){
+        logger.info("Attempting to play piece {} at {} {}.", piece, placeX, placeY);
+        int value = piece.getValue();
+        int[][] blocks = piece.getBlocks();
+
+        //Check if the piece can be played at that particular position
+        if(!canPlayPiece(piece,placeX,placeY)) return;
+
+
+        for(var blockX = 0; blockX < blocks.length; blockX++){
+            for(var blockY = 0; blockY < blocks.length; blockY++){
+                var blockValue = blocks[blockX][blockY];
+                if(blockValue>0) {
+                    set(placeX + blockX -1, placeY + blockY -1, value);
+                }
+            }
+        }
     }
 
 }

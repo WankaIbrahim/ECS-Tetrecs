@@ -1,10 +1,9 @@
 package uk.ac.soton.comp1206.game;
 
 /**
- * Instances of GamePiece Represents the model of a specific Game Piece with it's block makeup.
- *
- * The GamePiece class also contains a factory for producing a GamePiece of a particular shape, as specified by it's
- * number.
+ * Instances of GamePiece Represents the model of a specific Game Piece with its block makeup.
+ * The GamePiece class also contains a factory for producing a GamePiece of a particular shape,
+ * as specified by its number.
  */
 public class GamePiece {
 
@@ -191,7 +190,7 @@ public class GamePiece {
     }
 
     /**
-     * Rotate this piece exactly once by rotating it's 3x3 grid
+     * Rotate this piece exactly once by rotating its 3x3 grid
      */
     public void rotate() {
         int[][] rotated = new int[blocks.length][blocks[0].length];

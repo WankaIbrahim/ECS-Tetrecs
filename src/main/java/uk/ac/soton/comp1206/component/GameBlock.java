@@ -166,7 +166,7 @@ public class GameBlock extends Canvas {
     }
 
     /**
-     * Get the current value held by this block, representing it's colour
+     * Get the current value held by this block, representing its color
      * @return value
      */
     public int getValue() {
@@ -181,4 +181,12 @@ public class GameBlock extends Canvas {
         value.bind(input);
     }
 
+    @Override
+    public String toString() {
+        return "GameBlock{" +
+            "x=" + x +
+            ", y=" + y +
+            ", value=" + value +
+            '}';
+    }
 }

@@ -1,8 +1,12 @@
 package uk.ac.soton.comp1206.game;
 
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.GameBlock;
+import uk.ac.soton.comp1206.component.GameBlockCoordinate;
 
 /**
  * The Game class handles the main logic, state and properties of the TetrECS game. Methods to manipulate the game state
@@ -11,6 +15,8 @@ import uk.ac.soton.comp1206.component.GameBlock;
 public class Game {
 
     private static final Logger logger = LogManager.getLogger(Game.class);
+
+    private final Random random = new Random();
 
     /**
      * Number of rows
@@ -26,6 +32,8 @@ public class Game {
      * The grid model linked to the game
      */
     protected final Grid grid;
+    private GamePiece currentPiece;
+
 
     /**
      * Create a new game with the specified rows and columns. Creates a corresponding grid model.
@@ -48,11 +56,25 @@ public class Game {
         initialiseGame();
     }
 
+    public void nextPiece(){
+        currentPiece = spawnPiece();
+        logger.info("The next piece is: {}", currentPiece);
+    }
+
+    public GamePiece spawnPiece(){
+        var maxPieces = GamePiece.PIECES;
+        var randomPiece = random.nextInt(maxPieces);
+        logger.info("Picking a random piece: {}", randomPiece);
+
+        return GamePiece.createPiece(randomPiece);
+    }
+
     /**
-     * Initialise a new game and set up anything that needs to be done at the start
+     * Initialize a new game and set up anything that needs to be done at the start
      */
     public void initialiseGame() {
         logger.info("Initialising game");
+        nextPiece();
     }
 
     /**
@@ -60,19 +82,52 @@ public class Game {
      * @param gameBlock the block that was clicked
      */
     public void blockClicked(GameBlock gameBlock) {
-        //Get the position of this block
-        int x = gameBlock.getX();
-        int y = gameBlock.getY();
+        int placeX = gameBlock.getX();
+        int placeY = gameBlock.getY();
 
-        //Get the new value for this block
-        int previousValue = grid.get(x,y);
-        int newValue = previousValue + 1;
-        if (newValue  > GamePiece.PIECES) {
-            newValue = 0;
+        if(grid.canPlayPiece(currentPiece,placeX,placeY)){
+            grid.playPiece(currentPiece, placeX, placeY);
+            nextPiece();
+        }
+        afterPiece();
+
+    }
+
+    public void afterPiece(){
+        Set<GameBlockCoordinate> blocksToBeCleared = new HashSet<>();
+
+
+        for(int gridX = 0; gridX<getRows(); gridX++){
+            int blockCount = 0;
+            for(int gridY = 0; gridY<getCols(); gridY++){
+                if(grid.get(gridX,gridY)>0){
+                    blockCount++;
+                }
+            }
+            if (blockCount == 5) {
+                for(int gridY = 0; gridY<getCols(); gridY++){
+                    blocksToBeCleared.add(new GameBlockCoordinate(gridX,gridY));
+                }
+            }
         }
 
-        //Update the grid with the new value
-        grid.set(x,y,newValue);
+        for(int gridY = 0; gridY<getCols(); gridY++){
+            int blockCount = 0;
+            for(int gridX = 0; gridX<getRows(); gridX++){
+                if(grid.get(gridX,gridY)>0){
+                    blockCount++;
+                }
+            }
+            if (blockCount == 5) {
+                for(int gridX = 0; gridX<getRows(); gridX++){
+                    blocksToBeCleared.add(new GameBlockCoordinate(gridX,gridY));
+                }
+            }
+        }
+
+        for(GameBlockCoordinate block: blocksToBeCleared){
+            grid.set(block.getX(), block.getY(), 0);
+        }
     }
 
     /**
