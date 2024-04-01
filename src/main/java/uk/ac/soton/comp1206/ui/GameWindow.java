@@ -10,7 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.App;
 import uk.ac.soton.comp1206.network.Communicator;
-import uk.ac.soton.comp1206.scene.*;
+import uk.ac.soton.comp1206.scene.BaseScene;
+import uk.ac.soton.comp1206.scene.ChallengeScene;
+import uk.ac.soton.comp1206.scene.MenuScene;
 
 /**
  * The GameWindow is the single window for the game where everything takes place. To move between screens in the game,
@@ -57,12 +59,12 @@ public class GameWindow {
         //Setup communicator
         communicator = new Communicator("ws://ofb-labs.soton.ac.uk:9700");
 
-        //Go to menu
+      //Go to the menu
         startMenu();
     }
 
     /**
-     * Setup the font and any other resources we need
+     * Set up the font and any other resources we need
      */
     private void setupResources() {
         logger.info("Loading resources");
@@ -86,7 +88,8 @@ public class GameWindow {
     public void startChallenge() { loadScene(new ChallengeScene(this)); }
 
     /**
-     * Setup the default settings for the stage itself (the window), such as the title and minimum width and height.
+     * Set up the default settings for the stage itself (the window),
+     * such as the title and minimum width and height.
      */
     public void setupStage() {
         stage.setTitle("TetrECS");
@@ -109,12 +112,12 @@ public class GameWindow {
         scene = newScene.setScene();
         stage.setScene(scene);
 
-        //Initialise the scene when ready
+      //Initialize the scene when ready
         Platform.runLater(() -> currentScene.initialise());
     }
 
     /**
-     * Setup the default scene (an empty black scene) when no scene is loaded
+     * Set up the default scene (an empty black scene) when no scene is loaded
      */
     public void setupDefaultScene() {
         this.scene = new Scene(new Pane(),width,height, Color.BLACK);

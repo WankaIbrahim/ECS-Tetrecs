@@ -94,7 +94,7 @@ public class GameBlockCoordinate {
 
     /**
      * Compare this GameBlockCoordinate to another GameBlockCoordinate
-     * @param obj other object to compare to
+     * @param obj another object to compare to
      * @return true if equal, otherwise false
      */
     @Override public boolean equals(Object obj) {

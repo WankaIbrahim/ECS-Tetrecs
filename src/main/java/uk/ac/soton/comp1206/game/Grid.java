@@ -45,11 +45,11 @@ public class Grid {
         this.rows = rows;
 
         //Create the grid itself
-        grid = new SimpleIntegerProperty[cols][rows];
+        grid = new SimpleIntegerProperty[rows][cols];
 
         //Add a SimpleIntegerProperty to every block in the grid
-        for(var y = 0; y < rows; y++) {
-            for(var x = 0; x < cols; x++) {
+        for (int x = 0; x < rows; x++) {
+            for (int y = 0; y < cols; y++) {
                 grid[x][y] = new SimpleIntegerProperty(0);
             }
         }
@@ -118,16 +118,26 @@ public class Grid {
         logger.info("Checking if piece {} can be played at {} {}", piece, placeX, placeY);
 
 
+
         int[][] blocks = piece.getBlocks();
         for(var blockX = 0; blockX < blocks.length; blockX++){
             for(var blockY = 0; blockY < blocks.length; blockY++){
-                var blockValue = blocks[blockX][blockX];
-                if(blockValue>0) {
-                    var gridValue = get(placeX + blockX -1, placeY + blockY -1);
-                    if(gridValue!=0){
-                        logger.error("Unable to place piece: {} at {} {}", piece, blockX, blockY);
+                var blockValue = blocks[blockX][blockY];
+                logger.info("Block location {},{} with a value of {} is being checked", blockX,
+                    blockY, blockValue);
+
+                if (blockValue > 0) {
+                    var gridValue = get(placeX + blockX - 1, placeY + blockY - 1);
+                    logger.info("Value of grid position {},{} is {}", placeX + blockX - 1,
+                        placeY + blockY - 1, gridValue);
+
+                    if (gridValue > 0) {
+                        logger.info("Block cannot be placed");
                         return false;
+                    } else {
+                        logger.info("Block can be placed");
                     }
+
                 }
             }
         }
@@ -144,9 +154,6 @@ public class Grid {
         logger.info("Attempting to play piece {} at {} {}.", piece, placeX, placeY);
         int value = piece.getValue();
         int[][] blocks = piece.getBlocks();
-
-        //Check if the piece can be played at that particular position
-        if(!canPlayPiece(piece,placeX,placeY)) return;
 
 
         for(var blockX = 0; blockX < blocks.length; blockX++){

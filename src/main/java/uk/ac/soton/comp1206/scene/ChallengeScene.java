@@ -1,6 +1,7 @@
 package uk.ac.soton.comp1206.scene;
 
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.GameBlock;
@@ -29,6 +30,7 @@ public class ChallengeScene extends BaseScene {
     /**
      * Build the Challenge window
      */
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void build() {
         logger.info("Building " + this.getClass().getName());
@@ -49,7 +51,7 @@ public class ChallengeScene extends BaseScene {
         var board = new GameBoard(game.getGrid(),gameWindow.getWidth()/2,gameWindow.getWidth()/2);
         mainPane.setCenter(board);
 
-        //Handle block on gameboard grid being clicked
+      //Handle block on game-board grid being clicked
         board.setOnBlockClick(this::blockClicked);
     }
 
@@ -62,7 +64,7 @@ public class ChallengeScene extends BaseScene {
     }
 
     /**
-     * Setup the game object and model
+     * Set up the game object and model
      */
     public void setupGame() {
         logger.info("Starting a new challenge");
@@ -72,7 +74,7 @@ public class ChallengeScene extends BaseScene {
     }
 
     /**
-     * Initialise the scene and start the game
+     * Initialize the scene and start the game
      */
     @Override
     public void initialise() {

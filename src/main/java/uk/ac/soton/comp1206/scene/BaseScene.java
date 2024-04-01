@@ -16,7 +16,7 @@ public abstract class BaseScene {
     protected Scene scene;
 
     /**
-     * Create a new scene, passing in the GameWindow the scene will be displayed in
+     * Create a new scene and pass in the GameWindow the scene will be displayed in
      * @param gameWindow the game window
      */
     public BaseScene(GameWindow gameWindow) {
@@ -24,7 +24,7 @@ public abstract class BaseScene {
     }
 
     /**
-     * Initialise this scene. Called after creation
+     * Initialize this scene. Called after creation
      */
     public abstract void initialise();
 

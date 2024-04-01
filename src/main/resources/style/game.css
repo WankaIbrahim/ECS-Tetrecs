@@ -1,3 +1,4 @@
+/*noinspection ALL*/
 .gamepane {
     -fx-background-color: black;
 }
@@ -38,6 +39,7 @@
     -fx-fill: yellow;
 }
 
+/*noinspection ALL*/
 .bigtitle {
     -fx-fill: yellow;
     -fx-font-family: 'Orbitron';
@@ -90,6 +92,7 @@
     -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
 }
 
+/*noinspection ALL*/
 .hiscore {
     -fx-fill: orange;
     -fx-font-family: 'Orbitron';
@@ -112,11 +115,13 @@
     -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
 }
 
+/*noinspection ALL*/
 .scorelist {
     -fx-font-size: 20px;
     -fx-font-family: 'Orbitron';
 }
 
+/*noinspection ALL*/
 .scoreitem {
 
 }
@@ -125,10 +130,12 @@
 
 }
 
+/*noinspection ALL*/
 .myscore {
     -fx-font-weight: 700;
 }
 
+/*noinspection ALL*/
 .deadscore {
     -fx-strikethrough: true;
 }
@@ -198,6 +205,7 @@ TextField {
     -fx-fill: white;
 }
 
+/*noinspection ALL*/
 .myname {
     -fx-font-weight: 700;
 }

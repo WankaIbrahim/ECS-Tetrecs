@@ -1,19 +1,23 @@
 package uk.ac.soton.comp1206.network;
 
-import com.neovisionaries.ws.client.*;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketException;
+import com.neovisionaries.ws.client.WebSocketFactory;
+import com.neovisionaries.ws.client.WebSocketFrame;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.event.CommunicationsListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Uses web sockets to talk to a web socket server and relays communication to attached listeners
  *
  * YOU DO NOT NEED TO WORRY ABOUT THIS CLASS! Leave it be :-)
  */
+@SuppressWarnings("ALL")
 public class Communicator {
 
     private static final Logger logger = LogManager.getLogger(Communicator.class);
@@ -40,7 +44,7 @@ public class Communicator {
             ws.connect();
             logger.info("Connected to " + server);
 
-            //When a message is received, call the receive method
+          //When a message is received, call the reception method
             ws.addListener(new WebSocketAdapter() {
                 @Override
                 public void onTextMessage(WebSocket websocket, String message) throws Exception {

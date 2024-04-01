@@ -4,17 +4,15 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
  * The Visual User Interface component representing a single block in the grid.
- *
  * Extends Canvas and is responsible for drawing itself.
- *
- * Displays an empty square (when the value is 0) or a coloured square depending on value.
- *
+ * Displays an empty square (when the value is 0) or a colored square depending on value.
  * The GameBlock value should be bound to a corresponding block in the Grid model.
  */
 public class GameBlock extends Canvas {
@@ -22,7 +20,7 @@ public class GameBlock extends Canvas {
     private static final Logger logger = LogManager.getLogger(GameBlock.class);
 
     /**
-     * The set of colours for different pieces
+     * The set of colors for different pieces
      */
     public static final Color[] COLOURS = {
             Color.TRANSPARENT,
@@ -59,7 +57,7 @@ public class GameBlock extends Canvas {
     private final int y;
 
     /**
-     * The value of this block (0 = empty, otherwise specifies the colour to render as)
+     * The value of this block (zero = empty, otherwise specifies the color to render as)
      */
     private final IntegerProperty value = new SimpleIntegerProperty(0);
 
@@ -107,7 +105,7 @@ public class GameBlock extends Canvas {
         if(value.get() == 0) {
             paintEmpty();
         } else {
-            //If the block is not empty, paint with the colour represented by the value
+          //If the block is not empty, paint with the color represented by the value
             paintColor(COLOURS[value.get()]);
         }
     }
@@ -131,8 +129,8 @@ public class GameBlock extends Canvas {
     }
 
     /**
-     * Paint this canvas with the given colour
-     * @param colour the colour to paint
+     * Paint this canvas with the given color
+     * @param colour the color to paint
      */
     private void paintColor(Paint colour) {
         var gc = getGraphicsContext2D();

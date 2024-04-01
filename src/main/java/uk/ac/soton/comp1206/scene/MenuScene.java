@@ -2,7 +2,8 @@ package uk.ac.soton.comp1206.scene;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +13,7 @@ import uk.ac.soton.comp1206.ui.GameWindow;
 /**
  * The main menu of the game. Provides a gateway to the rest of the game.
  */
+@SuppressWarnings("DuplicatedCode")
 public class MenuScene extends BaseScene {
 
     private static final Logger logger = LogManager.getLogger(MenuScene.class);
@@ -48,7 +50,7 @@ public class MenuScene extends BaseScene {
         title.getStyleClass().add("title");
         mainPane.setTop(title);
 
-        //For now, let us just add a button that starts the game. I'm sure you'll do something way better.
+      //For now, let us add a button that starts the game. I'm sure you'll do something way better.
         var button = new Button("Play");
         mainPane.setCenter(button);
 
@@ -57,7 +59,7 @@ public class MenuScene extends BaseScene {
     }
 
     /**
-     * Initialise the menu
+     * Initialize the menu
      */
     @Override
     public void initialise() {
