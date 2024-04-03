@@ -131,7 +131,7 @@ public class Grid {
                     logger.info("Value of grid position {},{} is {}", placeX + blockX - 1,
                         placeY + blockY - 1, gridValue);
 
-                    if (gridValue > 0) {
+                    if (gridValue != 0) {
                         logger.info("Block cannot be placed");
                         return false;
                     } else {
