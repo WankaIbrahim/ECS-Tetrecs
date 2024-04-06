@@ -4,7 +4,6 @@ import javafx.beans.NamedArg;
 
 /**
  * Represents a row and column representation of a block in the grid. Holds the x (column) and y (row).
- *
  * Useful for use in a set or list or other form of a collection.
  */
 public class GameBlockCoordinate {

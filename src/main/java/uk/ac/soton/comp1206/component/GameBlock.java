@@ -6,21 +6,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * The Visual User Interface component representing a single block in the grid.
  * Extends Canvas and is responsible for drawing itself.
- * Displays an empty square (when the value is 0) or a colored square depending on value.
+ * Displays an empty square (when the value is 0) or a coloured square depending on value.
  * The GameBlock value should be bound to a corresponding block in the Grid model.
  */
 public class GameBlock extends Canvas {
 
-    private static final Logger logger = LogManager.getLogger(GameBlock.class);
-
     /**
-     * The set of colors for different pieces
+     * The set of colours for different pieces
      */
     public static final Color[] COLOURS = {
             Color.TRANSPARENT,
@@ -41,9 +37,18 @@ public class GameBlock extends Canvas {
             Color.PURPLE
     };
 
+  /**
+   * The board that holds the block
+   */
     private final GameBoard gameBoard;
 
-    private final double width;
+  /**
+   * The width of the block
+   */
+  private final double width;
+    /**
+     * The height of the block
+     */
     private final double height;
 
     /**
@@ -57,7 +62,7 @@ public class GameBlock extends Canvas {
     private final int y;
 
     /**
-     * The value of this block (zero = empty, otherwise specifies the color to render as)
+     * The value of this block (zero = empty, otherwise specifies the colour to render as)
      */
     private final IntegerProperty value = new SimpleIntegerProperty(0);
 
@@ -80,7 +85,11 @@ public class GameBlock extends Canvas {
         setWidth(width);
         setHeight(height);
 
-        //Do an initial paint
+      setOnMouseEntered((e) -> paintHover());
+
+      setOnMouseExited((e) -> paintEmpty());
+
+      //Do an initial paint
         paint();
 
         //When the value property is updated, call the internal updateValue method
@@ -97,43 +106,52 @@ public class GameBlock extends Canvas {
         paint();
     }
 
-    /**
+
+  /**
      * Handle painting of the block canvas
      */
     public void paint() {
         //If the block is empty, paint as empty
-        if(value.get() == 0) {
-            paintEmpty();
-        } else {
-          //If the block is not empty, paint with the color represented by the value
-            paintColor(COLOURS[value.get()]);
-        }
+      if (value.get() == 0) {
+        paintEmpty();
+      }
+
+      //If the block is not empty, paint with the colour represented by the value
+      if (value.get() != 0) {
+        paintColor(COLOURS[value.get()]);
+      }
     }
 
-    /**
+
+  /**
      * Paint this canvas empty
      */
     private void paintEmpty() {
-        var gc = getGraphicsContext2D();
+      if (value.get() != 0) {
+        return;
+      }
+      var gc = getGraphicsContext2D();
 
         //Clear
         gc.clearRect(0,0,width,height);
 
         //Fill
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0,0, width, height);
+      Color c = new Color(0, 0, 0, 0.24);
+      gc.setFill(c);
+      gc.fillRect(0, 0, width, height);
 
-        //Border
-        gc.setStroke(Color.BLACK);
-        gc.strokeRect(0,0,width,height);
+      //Border
+      gc.setStroke(Color.color(1, 1, 1, 0.5));
+      gc.strokeRect(0,0,width,height);
+
     }
 
     /**
-     * Paint this canvas with the given color
-     * @param colour the color to paint
+     * Paint this canvas with the given colour
+     * @param colour the colour to paint
      */
-    private void paintColor(Paint colour) {
-        var gc = getGraphicsContext2D();
+    void paintColor(Paint colour) {
+      var gc = getGraphicsContext2D();
 
         //Clear
         gc.clearRect(0,0,width,height);
@@ -142,12 +160,44 @@ public class GameBlock extends Canvas {
         gc.setFill(colour);
         gc.fillRect(0,0, width, height);
 
-        //Border
+      //Colour highlights
+      gc.setFill(Color.color(1, 1, 1, 0.5));
+      gc.fillRect(0, 0, width, 2);
+      gc.fillRect(0, 0, 2, height);
+
+      //Colour shadows
+      gc.setFill(Color.color(0, 0, 0, 0.5));
+      gc.fillRect(width - 2, 0, width, height);
+      gc.fillRect(0, height - 2, width, height);
+
+      //Border
         gc.setStroke(Color.BLACK);
         gc.strokeRect(0,0,width,height);
+
+      if (getX() == 1 && getY() == 1 && gameBoard.isCurrentBoard()) {
+        Color b = new Color(0.2, 0.2, 0.1, 0.80);
+        gc.setFill(b);
+        gc.fillOval(0, 0, width, height);
+      }
     }
 
-    /**
+  /**
+   * Paint this canvas when it is hovered over
+   */
+  private void paintHover() {
+    if (value.get() != 0) {
+      return;
+    }
+    if (gameBoard.isGameBoard()) {
+      var gc = getGraphicsContext2D();
+
+      gc.setFill(Color.color(1, 1, 1, 0.5));
+      gc.fillRect(0, 0, width, height);
+    }
+  }
+
+
+  /**
      * Get the column of this block
      * @return column number
      */
@@ -164,14 +214,6 @@ public class GameBlock extends Canvas {
     }
 
     /**
-     * Get the current value held by this block, representing its color
-     * @return value
-     */
-    public int getValue() {
-        return this.value.get();
-    }
-
-    /**
      * Bind the value of this block to another property. Used to link the visual block to a corresponding block in the Grid.
      * @param input property to bind the value to
      */
@@ -179,7 +221,11 @@ public class GameBlock extends Canvas {
         value.bind(input);
     }
 
-    @Override
+  /**
+   * Get the string representation of the block properties
+   * @return The block properties
+   */
+  @Override
     public String toString() {
         return "GameBlock{" +
             "x=" + x +

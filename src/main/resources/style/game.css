@@ -65,8 +65,8 @@
     -fx-font-family: 'Orbitron';
     -fx-font-size: 20px;
     -fx-font-weight: 700;
-    -fx-border-color: black;
-    -fx-stroke: black;
+  -fx-stroke: grey;
+  -fx-text-alignment: center;
     -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
 }
 
@@ -87,6 +87,17 @@
     -fx-font-size: 24px;
     -fx-font-weight: 700;
     -fx-border-color: black;
+  -fx-stroke: black;
+  -fx-text-alignment: center;
+  -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
+}
+
+.multiplier {
+  -fx-fill: #ff6600;
+  -fx-font-family: 'Orbitron';
+  -fx-font-size: 24px;
+  -fx-font-weight: 700;
+  -fx-border-color: black;
     -fx-stroke: black;
     -fx-text-alignment: center;
     -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);

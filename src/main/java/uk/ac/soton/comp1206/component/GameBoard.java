@@ -41,6 +41,21 @@ public class GameBoard extends GridPane {
     private final double height;
 
     /**
+     * Determine if it is a game board or subclass
+     */
+    private boolean isGameBoard = false;
+
+    /**
+     * Determine if it is a current board or other type of game board
+     */
+    private boolean isCurrentBoard = false;
+
+    /**
+     * Determine if it is a next board or other type of game board
+     */
+    private boolean isNextBoard = false;
+
+    /**
      * The grid this GameBoard represents
      */
     final Grid grid;
@@ -67,11 +82,13 @@ public class GameBoard extends GridPane {
         this.rows = grid.getRows();
         this.width = width;
         this.height = height;
+        this.isGameBoard = true;
         this.grid = grid;
 
         //Build the GameBoard
         build();
     }
+
 
     /**
      * Create a new GameBoard with its own internal grid,
@@ -82,43 +99,38 @@ public class GameBoard extends GridPane {
      * @param rows number of rows for internal grid
      * @param width the visual width
      * @param height the visual height
+     * @param isCurrentBoard if it is a current board
+     * @param isNextBoard if it is a next board
      */
-    public GameBoard(int cols, int rows, double width, double height) {
+    public GameBoard(int rows, int cols, double width, double height, boolean isCurrentBoard,
+        boolean isNextBoard) {
         this.cols = cols;
         this.rows = rows;
         this.width = width;
         this.height = height;
-        this.grid = new Grid(cols,rows);
+        this.isCurrentBoard = isCurrentBoard;
+        this.isNextBoard = isNextBoard;
+        this.grid = new Grid(rows, cols);
 
         //Build the GameBoard
         build();
     }
 
-    /**
-     * Get a specific block from the GameBoard, specified by its row and column
-     * @param x column
-     * @param y row
-     * @return game block at the given column and row
-     */
-    public GameBlock getBlock(int x, int y) {
-        return blocks[x][y];
-    }
 
     /**
      * Build the GameBoard by creating a block at every x and y column and row
      */
     protected void build() {
-        logger.info("Building grid: {} x {}",cols,rows);
+        logger.info("Building grid: {} x {}", rows, cols);
 
-        setMaxWidth(width);
-        setMaxHeight(height);
+        setPrefSize(width, height);
 
         setGridLinesVisible(true);
 
-        blocks = new GameBlock[cols][rows];
+        blocks = new GameBlock[rows][cols];
 
-        for(var y = 0; y < rows; y++) {
-            for (var x = 0; x < cols; x++) {
+        for (var x = 0; x < rows; x++) {
+            for (var y = 0; y < cols; y++) {
                 createBlock(x,y);
             }
         }
@@ -129,7 +141,7 @@ public class GameBoard extends GridPane {
      * @param x column
      * @param y row
      */
-    protected GameBlock createBlock(int x, int y) {
+    protected void createBlock(int x, int y) {
         var blockWidth = width / cols;
         var blockHeight = height / rows;
 
@@ -147,9 +159,8 @@ public class GameBoard extends GridPane {
 
         //Add a mouse click handler to the block to trigger GameBoard blockClicked method
         block.setOnMouseClicked((e) -> blockClicked(e, block));
-
-        return block;
     }
+
 
     /**
      * Set the listener to handle an event when a block is clicked
@@ -164,12 +175,58 @@ public class GameBoard extends GridPane {
      * @param event mouse event
      * @param block block clicked on
      */
-    private void blockClicked(MouseEvent event, GameBlock block) {
+    void blockClicked(MouseEvent event, GameBlock block) {
         logger.info("Block clicked: {}", block);
 
         if(blockClickedListener != null) {
-            blockClickedListener.blockClicked(block);
+            blockClickedListener.blockClicked(event, block);
         }
     }
 
+
+    /**
+     * Get the grid associated with the board
+     * @return The grid associated with the board
+     */
+    protected Grid getGrid() {
+        return grid;
+    }
+
+    /**
+     * Get a specific block from the GameBoard, specified by its row and column
+     *
+     * @param x column
+     * @param y row
+     * @return game block at the given column and row
+     */
+    public GameBlock getBlock(int x, int y) {
+        return blocks[x][y];
+    }
+
+    /**
+     * Get if it is a game board
+     *
+     * @return the isGameBoard boolean
+     */
+    public boolean isGameBoard() {
+        return isGameBoard;
+    }
+
+    /**
+     * Get if it is a current board
+     *
+     * @return is current board boolean
+     */
+    public boolean isCurrentBoard() {
+        return isCurrentBoard;
+    }
+
+    /**
+     * Get if it is a next piece board
+     *
+     * @return is next board boolean
+     */
+    public boolean isNextBoard() {
+        return isNextBoard;
+    }
 }

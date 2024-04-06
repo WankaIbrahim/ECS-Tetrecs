@@ -9,11 +9,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
+import uk.ac.soton.comp1206.utilities.Multimedia;
 
 /**
  * The main menu of the game. Provides a gateway to the rest of the game.
  */
-@SuppressWarnings("DuplicatedCode")
 public class MenuScene extends BaseScene {
 
     private static final Logger logger = LogManager.getLogger(MenuScene.class);
@@ -25,6 +25,7 @@ public class MenuScene extends BaseScene {
     public MenuScene(GameWindow gameWindow) {
         super(gameWindow);
         logger.info("Creating Menu Scene");
+      Multimedia.playBackgroundMusic("menu.mp3");
     }
 
     /**
@@ -33,7 +34,6 @@ public class MenuScene extends BaseScene {
     @Override
     public void build() {
         logger.info("Building " + this.getClass().getName());
-
         root = new GamePane(gameWindow.getWidth(),gameWindow.getHeight());
 
         var menuPane = new StackPane();

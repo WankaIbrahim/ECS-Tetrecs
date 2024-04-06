@@ -1,7 +1,7 @@
 package uk.ac.soton.comp1206.game;
 
 /**
- * Instances of GamePiece Represents the model of a specific Game Piece with its block makeup.
+ * Instances of GamePiece Represents the model of a specific Game Piece with its block make-up.
  * The GamePiece class also contains a factory for producing a GamePiece of a particular shape,
  * as specified by its number.
  */
@@ -143,10 +143,11 @@ public class GamePiece {
     }
 
     /**
-     * Create a new GamePiece with the given name, block makeup and value. Should not be called directly, only via the
+     * Create a new GamePiece with the given name, block make-up and value.
+     * Should not be called directly, only via the
      * factory.
      * @param name name of the piece
-     * @param blocks block makeup of the piece
+     * @param blocks block make-up of the piece
      * @param value the value of this piece
      */
     private GamePiece(String name, int[][] blocks, int value) {
@@ -172,7 +173,7 @@ public class GamePiece {
     }
 
     /**
-     * Get the block makeup of this piece
+     * Get the block make-up of this piece
      * @return 2D grid of the blocks representing the piece shape
      */
     public int[][] getBlocks() {

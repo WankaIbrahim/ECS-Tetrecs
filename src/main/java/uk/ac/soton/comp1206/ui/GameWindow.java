@@ -17,7 +17,6 @@ import uk.ac.soton.comp1206.scene.MenuScene;
 /**
  * The GameWindow is the single window for the game where everything takes place. To move between screens in the game,
  * we simply change the scene.
- *
  * The GameWindow has methods to launch each of the different parts of the game by switching scenes. You can add more
  * methods here to add more screens to the game.
  */
@@ -25,15 +24,30 @@ public class GameWindow {
 
     private static final Logger logger = LogManager.getLogger(GameWindow.class);
 
-    private final int width;
-    private final int height;
-
-    private final Stage stage;
-
-    private BaseScene currentScene;
-    private Scene scene;
-
+    /**
+     * The Communicator associated with the GameWindow
+     */
     final Communicator communicator;
+    /**
+     * The width of the GameWindow
+     */
+    private final int width;
+    /**
+     * The height of the GameWindow
+     */
+    private final int height;
+    /**
+     * The Stage associated with the GameWindow
+     */
+    private final Stage stage;
+    /**
+     * The current BaseScene associated with the GameWindow
+     */
+    private BaseScene currentScene;
+    /**
+     * The Scene associated with the GameWindow
+     */
+    private Scene scene;
 
     /**
      * Create a new GameWindow attached to the given stage with the specified width and height
@@ -62,6 +76,8 @@ public class GameWindow {
       //Go to the menu
         startMenu();
     }
+
+
 
     /**
      * Set up the font and any other resources we need
@@ -131,6 +147,8 @@ public class GameWindow {
         logger.info("Clearing up previous scene");
         communicator.clearListeners();
     }
+
+
 
     /**
      * Get the current scene being displayed

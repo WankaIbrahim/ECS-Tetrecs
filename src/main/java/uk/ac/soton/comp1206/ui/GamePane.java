@@ -4,8 +4,6 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * The Game Pane is a special pane
@@ -20,12 +18,20 @@ import org.apache.logging.log4j.Logger;
  */
 public class GamePane extends StackPane {
 
-    private static final Logger logger = LogManager.getLogger(GamePane.class);
-
+  /**
+   * The width of the pane
+   */
     private final int width;
-    private final int height;
+
+  /**
+   * The height of the pane
+   */
+  private final int height;
+
+    /**
+     * The scalar value
+     */
     private double scalar = 1;
-    private final boolean autoScale = true;
 
     /**
      * Create a new scalable GamePane with the given drawing width and height.
@@ -57,7 +63,8 @@ public class GamePane extends StackPane {
     public void layoutChildren() {
         super.layoutChildren();
 
-        if(!autoScale) {
+      boolean autoScale = true;
+      if(!autoScale) {
             return;
         }
 
@@ -66,13 +73,9 @@ public class GamePane extends StackPane {
         var scaleFactorWidth = getWidth() / width;
 
         //Work out whether to scale by width or height
-        if (scaleFactorHeight > scaleFactorWidth) {
-            setScalar(scaleFactorWidth);
-        } else {
-            setScalar(scaleFactorHeight);
-        }
+      setScalar(Math.min(scaleFactorHeight, scaleFactorWidth));
 
-        //Set up the scale
+      //Set up the scale
         Scale scale = new Scale(scalar,scalar);
 
         //Get the parent width and height

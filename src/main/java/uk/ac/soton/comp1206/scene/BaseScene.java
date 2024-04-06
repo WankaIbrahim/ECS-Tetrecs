@@ -1,5 +1,6 @@
 package uk.ac.soton.comp1206.scene;
 
+import java.util.Objects;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import uk.ac.soton.comp1206.ui.GamePane;
@@ -40,7 +41,8 @@ public abstract class BaseScene {
     public Scene setScene() {
         var previous = gameWindow.getScene();
         Scene scene = new Scene(root, previous.getWidth(), previous.getHeight(), Color.BLACK);
-        scene.getStylesheets().add(getClass().getResource("/style/game.css").toExternalForm());
+        scene.getStylesheets().add(
+            Objects.requireNonNull(getClass().getResource("/style/game.css")).toExternalForm());
         this.scene = scene;
         return scene;
     }
