@@ -65,8 +65,8 @@
     -fx-font-family: 'Orbitron';
     -fx-font-size: 20px;
     -fx-font-weight: 700;
-  -fx-stroke: grey;
-  -fx-text-alignment: center;
+    -fx-stroke: grey;
+    -fx-text-alignment: center;
     -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
 }
 

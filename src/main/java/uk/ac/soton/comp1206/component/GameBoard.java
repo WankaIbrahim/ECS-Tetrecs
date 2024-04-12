@@ -1,5 +1,6 @@
 package uk.ac.soton.comp1206.component;
 
+import java.util.Set;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import org.apache.logging.log4j.LogManager;
@@ -41,17 +42,17 @@ public class GameBoard extends GridPane {
     private final double height;
 
     /**
-     * Determine if it is a game board or subclass
+     * Determines if it is a game board or subclass
      */
     private boolean isGameBoard = false;
 
     /**
-     * Determine if it is a current board or other type of game board
+     * Determines if it is a current board or other type of game board
      */
     private boolean isCurrentBoard = false;
 
     /**
-     * Determine if it is a next board or other type of game board
+     * Determines if it is a next board or other type of game board
      */
     private boolean isNextBoard = false;
 
@@ -170,6 +171,7 @@ public class GameBoard extends GridPane {
         this.blockClickedListener = listener;
     }
 
+
     /**
      * Triggered when a block is clicked. Call the attached listener.
      * @param event mouse event
@@ -182,6 +184,8 @@ public class GameBoard extends GridPane {
             blockClickedListener.blockClicked(event, block);
         }
     }
+
+
 
 
     /**

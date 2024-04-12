@@ -12,7 +12,10 @@ import uk.ac.soton.comp1206.App;
 import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.scene.BaseScene;
 import uk.ac.soton.comp1206.scene.ChallengeScene;
+import uk.ac.soton.comp1206.scene.HowToPlayScene;
+import uk.ac.soton.comp1206.scene.IntroScene;
 import uk.ac.soton.comp1206.scene.MenuScene;
+import uk.ac.soton.comp1206.scene.MultiplayerMenu;
 
 /**
  * The GameWindow is the single window for the game where everything takes place. To move between screens in the game,
@@ -74,7 +77,7 @@ public class GameWindow {
         communicator = new Communicator("ws://ofb-labs.soton.ac.uk:9700");
 
       //Go to the menu
-        startMenu();
+        startIntro();
     }
 
 
@@ -94,14 +97,35 @@ public class GameWindow {
     /**
      * Display the main menu
      */
-    public void startMenu() {
-        loadScene(new MenuScene(this));
+    public void startMenu(boolean isActive) {
+        loadScene(new MenuScene(this,isActive));
     }
 
     /**
      * Display the single player challenge
      */
     public void startChallenge() { loadScene(new ChallengeScene(this)); }
+
+    /**
+     *Display the HowToPlay scene
+     */
+    public void startHowToPlayScene(){
+        loadScene(new HowToPlayScene(this));
+    }
+
+    /**
+     * Display multiplayermenu
+     */
+    public void startMultiplayerMenu(){
+        loadScene(new MultiplayerMenu(this));
+    }
+
+    /**
+     * Display intro screen
+     */
+    public void startIntro(){
+        loadScene(new IntroScene(this));
+    }
 
     /**
      * Set up the default settings for the stage itself (the window),
@@ -119,7 +143,7 @@ public class GameWindow {
      * @param newScene new scene to load
      */
     public void loadScene(BaseScene newScene) {
-        //Cleanup remains of the previous scene
+        //Clean-up remains of the previous scene
         cleanup();
 
         //Create the new scene and set it up
@@ -141,7 +165,7 @@ public class GameWindow {
     }
 
     /**
-     * When switching scenes, perform any cleanup needed, such as removing previous listeners
+     * When switching scenes, perform any clean-up needed, such as removing previous listeners
      */
     public void cleanup() {
         logger.info("Clearing up previous scene");

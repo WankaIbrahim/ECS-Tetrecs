@@ -1,10 +1,20 @@
 package uk.ac.soton.comp1206.scene;
 
-import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
+import java.util.Objects;
+import javafx.animation.Animation;
+import javafx.animation.RotateTransition;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.ui.GamePane;
@@ -22,10 +32,12 @@ public class MenuScene extends BaseScene {
      * Create a new menu scene
      * @param gameWindow the Game Window this will be displayed in
      */
-    public MenuScene(GameWindow gameWindow) {
+    public MenuScene(GameWindow gameWindow, boolean isActive) {
         super(gameWindow);
         logger.info("Creating Menu Scene");
-      Multimedia.playBackgroundMusic("menu.mp3");
+        if(!isActive){
+            Multimedia.playBackgroundMusic("menu.mp3");
+        }
     }
 
     /**
@@ -45,17 +57,60 @@ public class MenuScene extends BaseScene {
         var mainPane = new BorderPane();
         menuPane.getChildren().add(mainPane);
 
-        //Awful title
-        var title = new Text("TetrECS");
-        title.getStyleClass().add("title");
-        mainPane.setTop(title);
 
-      //For now, let us add a button that starts the game. I'm sure you'll do something way better.
-        var button = new Button("Play");
-        mainPane.setCenter(button);
+        var title = new ImageView(new Image(
+            Objects.requireNonNull(this.getClass().getResource("/images/TetrECS.png")).toExternalForm()));
+        title.setFitWidth(600);
+        title.setFitHeight(120);
+
+        HBox titleBox = new HBox(title);
+        titleBox.setPadding(new Insets(80,0,0,0));
+        titleBox.setAlignment(Pos.BOTTOM_CENTER);
+        mainPane.setTop(titleBox);
+
+        RotateTransition rotate = new RotateTransition();
+        rotate.setAxis(Rotate.Z_AXIS);
+        rotate.setFromAngle(3);
+        rotate.setToAngle(-3);
+        rotate.setRate(0.2);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setDuration(Duration.INDEFINITE);
+        rotate.setAutoReverse(true);
+        rotate.setNode(title);
+        rotate.play();
+
+
+
+
+
+        var menuItemsBox = new VBox();
+        menuItemsBox.setAlignment(Pos.CENTER);
+
+        var singlePlayer = new Text("Single Player");
+        singlePlayer.getStyleClass().add("menuItem");
+
+        var multiPlayer = new Text("Multi Player");
+        multiPlayer.getStyleClass().add("menuItem");
+
+        var howToPlay = new Text("How to Play");
+        howToPlay.getStyleClass().add("menuItem");
+
+        var exit = new Text("Exit");
+        exit.getStyleClass().add("menuItem");
+
+        menuItemsBox.getChildren().addAll(singlePlayer,multiPlayer,howToPlay,exit);
+        mainPane.setCenter(menuItemsBox);
 
         //Bind the button action to the startGame method in the menu
-        button.setOnAction(this::startGame);
+        singlePlayer.setOnMouseEntered(e-> singlePlayer.getStyleClass().add("menuItem:hover"));
+        multiPlayer.setOnMouseEntered(e-> multiPlayer.getStyleClass().add("menuItem:hover"));
+        howToPlay.setOnMouseEntered(e-> howToPlay.getStyleClass().add("menuItem:hover"));
+        exit.setOnMouseEntered(e-> exit.getStyleClass().add("menuItem:hover"));
+
+        singlePlayer.setOnMouseClicked(this::startGame);
+        multiPlayer.setOnMouseClicked(this::startMultiPlayer);
+        howToPlay.setOnMouseClicked(this::displayHowToPlay);
+        exit.setOnMouseClicked(e-> System.exit(0));
     }
 
     /**
@@ -67,11 +122,24 @@ public class MenuScene extends BaseScene {
     }
 
     /**
-     * Handle when the Start Game button is pressed
-     * @param event event
+     * Start the challenge scene
      */
-    private void startGame(ActionEvent event) {
+    private void startGame(MouseEvent event) {
         gameWindow.startChallenge();
+    }
+
+    /**
+     * Start the multiplayerScene
+     */
+    private void startMultiPlayer(MouseEvent event){
+        gameWindow.startMultiplayerMenu();
+    }
+
+    /**
+     *Start the howToPlayscene
+     */
+    private void displayHowToPlay(MouseEvent event){
+        gameWindow.startHowToPlayScene();
     }
 
 }

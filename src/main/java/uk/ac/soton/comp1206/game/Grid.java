@@ -63,27 +63,17 @@ public class Grid {
      * @return True if a piece can be played
      */
     public boolean canPlayPiece(GamePiece piece, int placeX, int placeY){
-        logger.info("Checking if piece {} can be played at {} {}", piece, placeX, placeY);
-
-
-
         int[][] blocks = piece.getBlocks();
         for(var blockX = 0; blockX < blocks.length; blockX++){
             for(var blockY = 0; blockY < blocks.length; blockY++){
                 var blockValue = blocks[blockX][blockY];
-                logger.info("Block location {},{} with a value of {} is being checked", blockX,
-                    blockY, blockValue);
 
                 if (blockValue > 0) {
                     var gridValue = get(placeX + blockX - 1, placeY + blockY - 1);
-                    logger.info("Value of grid position {},{} is {}", placeX + blockX - 1,
-                        placeY + blockY - 1, gridValue);
+
 
                     if (gridValue != 0) {
-                        logger.info("Block cannot be placed");
                         return false;
-                    } else {
-                        logger.info("Block can be placed");
                     }
 
                 }
@@ -99,7 +89,7 @@ public class Grid {
      * @param placeY The y coordinate of the piece to be played
      */
     public void playPiece(GamePiece piece, int placeX, int placeY){
-        logger.info("Attempting to play piece {} at {} {}.", piece, placeX, placeY);
+        logger.info("Piece {} played at {} {}.", piece.toString(), placeX, placeY);
         int value = piece.getValue();
         int[][] blocks = piece.getBlocks();
 
