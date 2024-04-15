@@ -41,9 +41,19 @@
 
 /*noinspection ALL*/
 .bigtitle {
-    -fx-fill: yellow;
+    -fx-fill: white;
     -fx-font-family: 'Orbitron';
     -fx-font-size: 64px;
+    -fx-font-weight: 900;
+    -fx-border-color: black;
+    -fx-stroke: black;
+    -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
+}
+
+.massivetitle {
+    -fx-fill: white;
+    -fx-font-family: 'Orbitron';
+    -fx-font-size: 60px;
     -fx-font-weight: 900;
     -fx-border-color: black;
     -fx-stroke: black;
@@ -130,11 +140,20 @@
 .scorelist {
     -fx-font-size: 20px;
     -fx-font-family: 'Orbitron';
+    -fx-fill: yellow;
+
 }
 
 /*noinspection ALL*/
 .scoreitem {
-
+    -fx-fill: yellow;
+    -fx-font-family: 'Orbitron';
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-border-color: black;
+    -fx-stroke: black;
+    -fx-text-alignment: center;
+    -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
 }
 
 .scorer {

@@ -3,10 +3,11 @@ package uk.ac.soton.comp1206.game;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.GameBlock;
@@ -93,16 +94,10 @@ public class Game {
    */
   private GameLoopListener gameLoopListener;
 
-
   /**
-   * The game timer
+   * The timeline used to time the game
    */
-  private Timer timer;
-
-  /**
-   * The task carried out by the timer
-   */
-  private TimerTask task;
+  private Timeline timeline;
 
 
 
@@ -130,9 +125,7 @@ public class Game {
     logger.info("Starting game");
     initialiseGame();
 
-    timer = new Timer();
-    createTask();
-
+    startTimeline();
   }
 
   /**
@@ -143,14 +136,17 @@ public class Game {
   }
 
   /**
-   * Updates the current and next piece
+   * Updates the current and next piece, also makes sure the current and next piece is not the same.
+   * This makes the game slightly less frustrating
    */
-  public void nextPiece() {
+  private void nextPiece() {
     currentPiece = nextPiece;
-    nextPiece = spawnPiece();
-    while (nextPiece.getValue() == currentPiece.getValue()) {
-      nextPiece = spawnPiece();
+    var tempPiece = spawnPiece();
+    while (tempPiece.getValue() == nextPiece.getValue()) {
+      tempPiece = spawnPiece();
     }
+
+    nextPiece = tempPiece;
 
     currentPiece(currentPiece);
     nextPiece(nextPiece);
@@ -162,7 +158,7 @@ public class Game {
    *
    * @return The new random piece created
    */
-  public GamePiece spawnPiece() {
+  private GamePiece spawnPiece() {
     var maxPieces = GamePiece.PIECES;
     var randomPiece = random.nextInt(maxPieces);
 
@@ -174,7 +170,7 @@ public class Game {
    * This includes clearing full rows and
    * columns and incrementing the score.
    */
-  public void afterPiece() {
+  private void afterPiece() {
     int numberOfLines = 0;
     boolean toIncrementMultiplier = false;
     Set<GameBlockCoordinate> blocksCleared = new HashSet<>();
@@ -277,18 +273,14 @@ public class Game {
    * Gets the delay for the timer
    * @return The delay for the timer
    */
-  public long getTimerDelay(){
-    int delay = 12000-(500*level.getValue());
-    return Math.max(delay, 2500);
-  }
+
 
   /**
    *Handles the looping of the game
    */
-  public void gameLoop(){
-    if(lives.getValue()<=0){
-      logger.info("GAME OVER");
-      //TODO Create an end game listener and method to go with it
+  private void gameLoop(){
+    if(getLives()<0){
+      return;
     }
     logger.info("Could not place a piece in time");
     lives.set(getLives()-1);
@@ -296,25 +288,37 @@ public class Game {
     currentPiece(currentPiece);
 
     multiplier.set(1);
-
-    task.cancel();
-    createTask();
+    Multimedia.playAudio("lifeloss.wav");
+    startTimeline();
   }
 
   /**
-   * Schedules a task for a timer
+   * Reset the timeline to register the new time delay and start it
    */
-  public void createTask(){
+  private void startTimeline(){
+    if(!(timeline==null)) timeline.stop();
     loop();
-    task = new TimerTask() {
-      @Override
-      public void run() {
-        gameLoop();
-      }
-    };
-    timer.schedule(task,getTimerDelay());
+
+    timeline = new Timeline(
+        new KeyFrame(
+            Duration.millis(getTimerDelay()),
+            e-> gameLoop())
+    );
+
+    timeline.play();
   }
 
+  /**
+   * Stop the timeline, needed for early ending of the game or for pausing
+   */
+  public void stopTime(){
+    timeline.stop();
+  }
+
+  public long getTimerDelay(){
+    int delay = 12000-(500*level.getValue());
+    return Math.max(delay, 2500);
+  }
 
   /**
    * When a block is clicked, check if a piece can be played there and play the piece there
@@ -327,9 +331,7 @@ public class Game {
     if (grid.canPlayPiece(currentPiece, placeX, placeY)) {
       grid.playPiece(currentPiece, placeX, placeY);
       nextPiece();
-
-      task.cancel();
-      createTask();
+      startTimeline();
 
       Multimedia.playAudio("place.mp3");
     } else {
@@ -574,6 +576,4 @@ public class Game {
   public GamePiece getNextPiece() {
     return nextPiece;
   }
-
-
 }

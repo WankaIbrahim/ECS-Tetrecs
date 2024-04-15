@@ -74,9 +74,14 @@ public class ChallengeScene extends BaseScene {
   private long barWidth = gameWindow.getWidth();
 
   /**
-   * The Timeline used for animating the timebar
+   * The Timeline used for timing the timebar
    */
   private Timeline timeline;
+
+  /**
+   * True if the game is over
+   */
+  private boolean gameover = false;
 
 
   /**
@@ -256,7 +261,7 @@ public class ChallengeScene extends BaseScene {
   /**
    * Set up the game object and model
    */
-  public void setupGame() {
+  private void setupGame() {
     logger.info("Starting a new challenge");
 
     //Start a new game
@@ -314,8 +319,7 @@ public class ChallengeScene extends BaseScene {
 
     switch (keyCode){
       case ESCAPE: {
-        //TODO Set this to take you to the end game screen
-
+        openScore();
         break;
       }
 
@@ -422,6 +426,10 @@ public class ChallengeScene extends BaseScene {
    * Resets the timebar
    */
   private void resetTimeBar(){
+    if(game.getLives()<0&&!gameover){
+      openScore();
+    }
+
     timeBar.setWidth(gameWindow.getWidth());
     barWidth = gameWindow.getWidth();
     timeline.stop();
@@ -430,5 +438,16 @@ public class ChallengeScene extends BaseScene {
     KeyFrame frame = new KeyFrame(Duration.millis(game.getTimerDelay()),start,end);
     timeline = new Timeline(frame);
     timeline.play();
+  }
+
+  /**
+   * End the game and open the score scene
+   */
+  private void openScore(){
+      gameover=true;
+      game.stopTime();
+      gameWindow.startHighscoreScene(game);
+      Multimedia.stopBackgroundMusic();
+      Multimedia.playAudio("gameover.wav");
   }
 }
