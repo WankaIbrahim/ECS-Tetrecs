@@ -42,7 +42,7 @@ public class IntroScene extends BaseScene {
    */
   @Override
   public void build() {
-    logger.info("Building " + this.getClass().getName());
+    logger.info("Building {}", this.getClass().getName());
     root = new GamePane(gameWindow.getWidth(),gameWindow.getHeight());
 
     var introPane = new StackPane();

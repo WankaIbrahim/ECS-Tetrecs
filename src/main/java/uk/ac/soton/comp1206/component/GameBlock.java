@@ -11,13 +11,13 @@ import javafx.scene.paint.Paint;
 /**
  * The Visual User Interface component representing a single block in the grid.
  * Extends Canvas and is responsible for drawing itself.
- * Displays an empty square (when the value is 0) or a colored square depending on value.
+ * Displays an empty square (when the value is 0) or a coloured square depending on value.
  * The GameBlock value should be bound to a corresponding block in the Grid model.
  */
 public class GameBlock extends Canvas {
 
     /**
-     * The set of colors for different pieces
+     * The set of colours for different pieces
      */
     private static final Color[] COLOURS = {
             Color.TRANSPARENT,
@@ -70,7 +70,7 @@ public class GameBlock extends Canvas {
 
 
     /**
-       * The value of this block (zero = empty, otherwise specifies the color to render as)
+       * The value of this block (zero = empty, otherwise specifies the colour to render as)
        */
     private final IntegerProperty value = new SimpleIntegerProperty(0);
 
@@ -124,7 +124,7 @@ public class GameBlock extends Canvas {
         paintEmpty();
       }
 
-      //If the block is not empty, paint with the color represented by the value
+      //If the block is not empty, paint with the colour represented by the value
       if (value.get() != 0) {
         paintColor(COLOURS[value.get()]);
       }
@@ -156,8 +156,8 @@ public class GameBlock extends Canvas {
     }
 
     /**
-     * Paint this canvas with the given color
-     * @param colour the color to paint
+     * Paint this canvas with the given colour
+     * @param colour the colour to paint
      */
     private void paintColor(Paint colour) {
       var gc = getGraphicsContext2D();

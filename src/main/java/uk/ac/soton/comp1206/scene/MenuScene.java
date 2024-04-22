@@ -45,7 +45,7 @@ public class MenuScene extends BaseScene {
      */
     @Override
     public void build() {
-        logger.info("Building " + this.getClass().getName());
+      logger.info("Building {}", this.getClass().getName());
         root = new GamePane(gameWindow.getWidth(),gameWindow.getHeight());
 
         var menuPane = new StackPane();
@@ -132,7 +132,7 @@ public class MenuScene extends BaseScene {
      * Start the multiplayerScene
      */
     private void startMultiPlayer(MouseEvent event){
-        gameWindow.startMultiplayerMenu();
+        gameWindow.startLobbyScene();
     }
 
     /**

@@ -67,12 +67,12 @@ public class Game {
   /**
    * The PieceBoard that holds the current piece
    */
-  private GamePiece currentPiece;
+  protected GamePiece currentPiece;
 
   /**
    * The PieceBoard that holds the next piece
    */
-  private GamePiece nextPiece;
+  protected GamePiece nextPiece;
 
   /**
    * The listener called when the next piece is updated
@@ -114,8 +114,6 @@ public class Game {
 
     //Create a new grid model to represent the game state
     this.grid = new Grid(cols, rows);
-    nextPiece = GamePiece.createPiece(random.nextInt(GamePiece.PIECES));
-    nextPiece();
   }
 
   /**
@@ -124,8 +122,6 @@ public class Game {
   public void start() {
     logger.info("Starting game");
     initialiseGame();
-
-    startTimeline();
   }
 
   /**
@@ -133,13 +129,17 @@ public class Game {
    */
   public void initialiseGame() {
     logger.info("Initialising game");
+
+    nextPiece = GamePiece.createPiece(random.nextInt(GamePiece.PIECES));
+    nextPiece();
+    startTimeline();
   }
 
   /**
-   * Updates the current and next piece, also makes sure the current and next piece is not the same.
+   * Updates the current and next piece, also makes sure the current and next piece is different.
    * This makes the game slightly less frustrating
    */
-  private void nextPiece() {
+  void nextPiece() {
     currentPiece = nextPiece;
     var tempPiece = spawnPiece();
     while (tempPiece.getValue() == nextPiece.getValue()) {
@@ -158,7 +158,7 @@ public class Game {
    *
    * @return The new random piece created
    */
-  private GamePiece spawnPiece() {
+  public GamePiece spawnPiece() {
     var maxPieces = GamePiece.PIECES;
     var randomPiece = random.nextInt(maxPieces);
 
@@ -269,16 +269,13 @@ public class Game {
     updateScore(pointsScored);
   }
 
-  /**
-   * Gets the delay for the timer
-   * @return The delay for the timer
-   */
+
 
 
   /**
    *Handles the looping of the game
    */
-  private void gameLoop(){
+  public void gameLoop(){
     if(getLives()<0){
       return;
     }
@@ -295,7 +292,7 @@ public class Game {
   /**
    * Reset the timeline to register the new time delay and start it
    */
-  private void startTimeline(){
+  void startTimeline(){
     if(!(timeline==null)) timeline.stop();
     loop();
 
@@ -315,44 +312,14 @@ public class Game {
     timeline.stop();
   }
 
+  /**
+   * Gets the delay for the timer
+   * @return The delay for the timer
+   */
   public long getTimerDelay(){
     int delay = 12000-(500*level.getValue());
     return Math.max(delay, 2500);
   }
-
-  /**
-   * When a block is clicked, check if a piece can be played there and play the piece there
-   * @param gameBlock the block that was clicked
-   */
-  public void blockClicked(GameBlock gameBlock) {
-    int placeX = gameBlock.getX();
-    int placeY = gameBlock.getY();
-    logger.info("Checking if piece {} can be played at {} {}", currentPiece, placeX, placeY);
-    if (grid.canPlayPiece(currentPiece, placeX, placeY)) {
-      grid.playPiece(currentPiece, placeX, placeY);
-      nextPiece();
-      startTimeline();
-
-      Multimedia.playAudio("place.mp3");
-    } else {
-      logger.error("Unable to place piece: {} at {} {}", currentPiece, placeX, placeY);
-      Multimedia.playAudio("fail.wav");
-    }
-
-    afterPiece();
-  }
-
-  /**
-   * Swap the current and next piece
-   */
-  public void swapPiece() {
-    Multimedia.playAudio("swappiece.mp3");
-    var tempPiece = currentPiece;
-    currentPiece = nextPiece;
-
-    nextPiece = tempPiece;
-  }
-
 
 
   /**
@@ -389,7 +356,39 @@ public class Game {
     this.gameLoopListener = gameLoopListener;
   }
 
+  /**
+   * When a block is clicked, check if a piece can be played there and play the piece there
+   * @param gameBlock the block that was clicked
+   */
+  public void blockClicked(GameBlock gameBlock) {
+    int placeX = gameBlock.getX();
+    int placeY = gameBlock.getY();
+    logger.info("Checking if piece {} can be played at {} {}", currentPiece, placeX, placeY);
+    if (grid.canPlayPiece(currentPiece, placeX, placeY)) {
+      grid.playPiece(currentPiece, placeX, placeY);
+      nextPiece();
+      startTimeline();
 
+      Multimedia.playAudio("place.mp3");
+    } else {
+      logger.error("Unable to place piece: {} at {} {}", currentPiece, placeX, placeY);
+      Multimedia.playAudio("fail.wav");
+    }
+
+    afterPiece();
+  }
+
+
+  /**
+   * Swap the current and next piece
+   */
+  public void swapPiece() {
+    Multimedia.playAudio("swappiece.mp3");
+    var tempPiece = currentPiece;
+    currentPiece = nextPiece;
+
+    nextPiece = tempPiece;
+  }
 
   /**
    * Triggers the currentPieceListener when the current piece is updated
@@ -576,4 +575,5 @@ public class Game {
   public GamePiece getNextPiece() {
     return nextPiece;
   }
+
 }

@@ -13,17 +13,7 @@ public class App extends Application {
 
     private static final Logger logger = LogManager.getLogger(App.class);
 
-    /**
-     * Base resolution width
-     */
-    private final int width = 800;
-
-    /**
-     * Base resolution height
-     */
-    private final int height = 600;
-
-    /**
+  /**
      * The App
      */
     private static App instance;
@@ -62,7 +52,10 @@ public class App extends Application {
         logger.info("Opening game window");
 
         //Change the width and height in this class to change the base rendering resolution for all game parts
-        var gameWindow = new GameWindow(stage,width,height);
+
+      int width = 800;
+      int height = 600;
+      var gameWindow = new GameWindow(stage, width, height);
 
         //Display the GameWindow
         stage.show();

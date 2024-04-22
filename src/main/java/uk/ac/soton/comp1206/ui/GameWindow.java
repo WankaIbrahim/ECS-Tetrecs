@@ -15,8 +15,9 @@ import uk.ac.soton.comp1206.scene.BaseScene;
 import uk.ac.soton.comp1206.scene.ChallengeScene;
 import uk.ac.soton.comp1206.scene.HowToPlayScene;
 import uk.ac.soton.comp1206.scene.IntroScene;
+import uk.ac.soton.comp1206.scene.LobbyScene;
 import uk.ac.soton.comp1206.scene.MenuScene;
-import uk.ac.soton.comp1206.scene.MultiplayerMenu;
+import uk.ac.soton.comp1206.scene.MultiplayerScene;
 import uk.ac.soton.comp1206.scene.NewScoreScene;
 import uk.ac.soton.comp1206.scene.ScoresScene;
 
@@ -116,7 +117,11 @@ public class GameWindow {
         loadScene(new ScoresScene(this, game, name, communicator));
     }
 
-    public void startHighscoreScene(Game game) {
+    /**
+     * Start the NewScoreScene
+     * @param game THe game associated with the NewScoreScene
+     */
+    public void startNewScoreScene(Game game) {
         loadScene(new NewScoreScene(this, game));
     }
 
@@ -130,8 +135,8 @@ public class GameWindow {
     /**
      * Display multiplayermenu
      */
-    public void startMultiplayerMenu(){
-        loadScene(new MultiplayerMenu(this));
+    public void startLobbyScene(){
+        loadScene(new LobbyScene(this, communicator));
     }
 
     /**
@@ -139,6 +144,13 @@ public class GameWindow {
      */
     public void startIntro(){
         loadScene(new IntroScene(this));
+    }
+
+    /**
+     * Display multiplayer game screen
+     */
+    public void startMultiplayerGame(Communicator communicator){
+        loadScene(new MultiplayerScene(this, communicator));
     }
 
     /**
@@ -212,11 +224,4 @@ public class GameWindow {
         return this.height;
     }
 
-    /**
-     * Get the communicator
-     * @return communicator
-     */
-    public Communicator getCommunicator() {
-        return communicator;
-    }
 }

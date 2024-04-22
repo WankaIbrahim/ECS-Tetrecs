@@ -156,6 +156,30 @@
     -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
 }
 
+.lobbyitem {
+    -fx-fill: white;
+    -fx-font-family: 'Orbitron';
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-border-color: black;
+    -fx-stroke: black;
+    -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
+}
+
+.lobbyitem2 {
+    -fx-fill: white;
+    -fx-font-family: 'Orbitron';
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-border-color: black;
+    -fx-stroke: black;
+    -fx-effect: dropshadow(gaussian, black, 1, 1.0, 1, 1);
+}
+
+.lobbyitem:hover {
+    -fx-fill: yellow;
+}
+
 .scorer {
 
 }
@@ -200,22 +224,16 @@
     -fx-border-width: 1;
 }
 
-.scroller {
-    -fx-background-color: transparent;
+.messagePane .viewport {
+    -fx-background-color: rgba(255, 255, 255, 0.2)
 }
 
 .scroller .viewport {
     -fx-background-color: transparent;
 }
 
-.messages {
-    -fx-background-color: transparent;
-    -fx-font-size: 12px;
-    -fx-font-family: 'Orbitron';
-}
-
-.messages Text {
-    -fx-fill: white;
+.messagesText {
+    -fx-fill: black;
 }
 
 TextField {
@@ -244,4 +262,19 @@ TextField {
     -fx-font-size: 10px;
     -fx-font-family: 'Orbitron';
     -fx-fill: white;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.messages {
+    -fx-font-family: "Cairo";
+    -fx-padding: 5 5 5 5;
+    -fx-font-size: 16px;
+}
+
+.nickname {
+    -fx-font-weight: 700;
+    -fx-fill: blue;
 }

@@ -130,19 +130,6 @@ public class GamePiece {
     }
 
     /**
-     * Create a new GamePiece of the specified piece number and rotation
-     * @param piece piece number
-     * @param rotation number of times to rotate
-     * @return the created GamePiece
-     */
-    public static GamePiece createPiece(int piece, int rotation) {
-        var newPiece = createPiece(piece);
-
-        newPiece.rotate(rotation);
-        return newPiece;
-    }
-
-    /**
      * Create a new GamePiece with the given name, block make-up and value.
      * Should not be called directly, only via the
      * factory.
@@ -178,16 +165,6 @@ public class GamePiece {
      */
     public int[][] getBlocks() {
         return blocks;
-    }
-
-    /**
-     * Rotate this piece the given number of rotations
-     * @param rotations number of rotations
-     */
-    public void rotate(int rotations) {
-        for(int rotated = 0; rotated < rotations; rotated ++) {
-            rotate();
-        }
     }
 
     /**

@@ -38,7 +38,7 @@ public class HowToPlayScene extends BaseScene {
    */
   @Override
   public void build() {
-    logger.info("Building " + this.getClass().getName());
+    logger.info("Building {}", this.getClass().getName());
     root = new GamePane(gameWindow.getWidth(),gameWindow.getHeight());
 
     var howToPlayPane = new StackPane();

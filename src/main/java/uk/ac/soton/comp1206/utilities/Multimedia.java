@@ -29,19 +29,19 @@ public class Multimedia {
    * @param audioPath The path to the audio file to be played
    */
   public static void playAudio(String audioPath) {
-//    String toPlay = Objects.requireNonNull(Multimedia.class.getResource("/sounds/" + audioPath))
-//        .toExternalForm();
-//    audioPlayer = new MediaPlayer(new Media(toPlay));
-//    audioPlayer.play();
-//
-//    logger.info("Playing audio {}", audioPath);
+    String toPlay = Objects.requireNonNull(Multimedia.class.getResource("/sounds/" + audioPath))
+        .toExternalForm();
+    audioPlayer = new MediaPlayer(new Media(toPlay));
+    audioPlayer.play();
+
+    logger.info("Playing audio {}", audioPath);
   }
 
   /**
    * Stop the current audio
    */
   public static void stopAudio(){
-//    audioPlayer.stop();
+    audioPlayer.stop();
   }
 
   /**
@@ -50,19 +50,19 @@ public class Multimedia {
    * @param audioPath The path to the audio file to be played
    */
   public static void playBackgroundMusic(String audioPath) {
-//    String toPlay = Objects.requireNonNull(Multimedia.class.getResource("/music/" + audioPath))
-//        .toExternalForm();
-//    musicPlayer = new MediaPlayer(new Media(toPlay));
-//    musicPlayer.cycleCountProperty().set(Integer.MAX_VALUE);
-//    musicPlayer.play();
-//    logger.info("Playing music {}", audioPath);
+    String toPlay = Objects.requireNonNull(Multimedia.class.getResource("/music/" + audioPath))
+        .toExternalForm();
+    musicPlayer = new MediaPlayer(new Media(toPlay));
+    musicPlayer.cycleCountProperty().set(Integer.MAX_VALUE);
+    musicPlayer.play();
+    logger.info("Playing music {}", audioPath);
   }
 
   /**
    * Stop the audio file being played in the background
    */
   public static void stopBackgroundMusic() {
-//    musicPlayer.stop();
+    musicPlayer.stop();
   }
 
 }

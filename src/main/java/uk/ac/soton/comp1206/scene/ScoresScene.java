@@ -31,8 +31,11 @@ import uk.ac.soton.comp1206.game.Game;
 import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
-import uk.ac.soton.comp1206.ui.ScoreList;
+import uk.ac.soton.comp1206.component.ScoreList;
 
+/**
+ * The ScoreScene
+ */
 public class ScoresScene extends BaseScene{
   private static final Logger logger = LogManager.getLogger(ScoresScene.class);
 
@@ -41,12 +44,24 @@ public class ScoresScene extends BaseScene{
    */
   private final Game game;
 
+  /**
+   * Holds the local scores
+   */
   private SimpleListProperty<Pair<String, Integer>> localScores;
 
+  /**
+   * Holds the online scores
+   */
   private SimpleListProperty<Pair<String, Integer>> onlineScores;
 
+  /**
+   * The name of the person who has set the latest score
+   */
   private final String scoreHolder;
 
+  /**
+   * The communicator associated with the ScoreScene
+   */
   private final Communicator communicator;
 
 
@@ -68,7 +83,7 @@ public class ScoresScene extends BaseScene{
    */
   @Override
   public void build() {
-    logger.info("Building " + this.getClass().getName());
+    logger.info("Building {}", this.getClass().getName());
     root = new GamePane(gameWindow.getWidth(),gameWindow.getHeight());
 
     var scorePane = new StackPane();
@@ -93,6 +108,10 @@ public class ScoresScene extends BaseScene{
 
   }
 
+  /**
+   * Create the VBox which holds the scores
+   * @return The VBox which holds the scores
+   */
   private VBox createScoreBox() {
     ScoreList localScoresBox = new ScoreList();
     localScoresBox.setAlignment(Pos.TOP_LEFT);
@@ -102,7 +121,7 @@ public class ScoresScene extends BaseScene{
     if(!Objects.equals(scoreHolder, "")){
       localScores.add(new Pair<>(scoreHolder, game.getScore()));
     }
-    loadScores();
+    loadLocalScores();
     localScores.sort((p1, p2) -> p2.getValue() - p1.getValue());
     writeScores();
 
@@ -142,6 +161,11 @@ public class ScoresScene extends BaseScene{
     return centerBox;
   }
 
+  /**
+   * Create the VBox which holds the ui components
+   * to be displayed at the top of the scene
+   * @return The VBox to be displayed at the top of the scene
+   */
   private VBox createTopBox() {
     var title = new ImageView(new Image(
         Objects.requireNonNull(this.getClass().getResource("/images/TetrECS.png")).toExternalForm()));
@@ -170,7 +194,10 @@ public class ScoresScene extends BaseScene{
     return topBox;
   }
 
-  private void loadScores(){
+  /**
+   * Load the scores stored locally
+   */
+  private void loadLocalScores(){
     try {
       Files.lines(Paths.get("scores.txt")).forEach(line -> {
         String[] parts = line.split(":");
@@ -186,6 +213,9 @@ public class ScoresScene extends BaseScene{
     }
   }
 
+  /**
+   * Load the scores from the server
+   */
   private void loadOnlineScores(){
     communicator.addListener((message) -> Platform.runLater(() -> {
         logger.info(message);
@@ -203,6 +233,9 @@ public class ScoresScene extends BaseScene{
     communicator.send("HISCORES");
   }
 
+  /**
+   * Write scores to the locally stored file
+   */
   private void writeScores(){
     try{
       Files.write(Paths.get("scores.txt"),localScores.stream().map(score -> score.getKey() + ":" + score.getValue()).collect(
@@ -211,8 +244,6 @@ public class ScoresScene extends BaseScene{
       logger.info("Problem writing scores");
     }
   }
-
-
 
   /**
    * Initialize the ScoreScene

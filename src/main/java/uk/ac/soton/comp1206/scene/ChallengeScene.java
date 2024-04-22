@@ -1,6 +1,11 @@
 package uk.ac.soton.comp1206.scene;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Set;
+import java.util.stream.Stream;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -41,12 +46,17 @@ public class ChallengeScene extends BaseScene {
   /**
    * The game associated with the current challenge
    */
-  private Game game;
+  protected Game game;
 
   /**
    * The GameBoard associated with the current challenge
    */
   private GameBoard board;
+
+  /**
+   * The main pane that holds the contents of the scene
+   */
+  private BorderPane mainPane;
 
   /**
    * The PieceBoard containing the current piece to be played
@@ -78,6 +88,8 @@ public class ChallengeScene extends BaseScene {
    */
   private Timeline timeline;
 
+  private Timeline colorTimeline;
+
   /**
    * True if the game is over
    */
@@ -103,7 +115,7 @@ public class ChallengeScene extends BaseScene {
    */
   @Override
   public void build() {
-    logger.info("Building " + this.getClass().getName());
+    logger.info("Building {}", this.getClass().getName());
 
     setupGame();
 
@@ -115,7 +127,7 @@ public class ChallengeScene extends BaseScene {
     challengePane.getStyleClass().add("challenge-background");
     root.getChildren().add(challengePane);
 
-    var mainPane = new BorderPane();
+    mainPane = new BorderPane();
     challengePane.getChildren().add(mainPane);
 
     var boardDimensions = gameWindow.getWidth() / 2;
@@ -125,20 +137,6 @@ public class ChallengeScene extends BaseScene {
 
 
     mainPane.setCenter(board);
-
-    mainPane.setTop(createTopInfoPanel());
-    mainPane.setLeft(createLeftInfoPanel());
-    mainPane.setRight(createRightInfoPanel());
-    mainPane.setBottom(createTimeBar());
-
-    board.setOnBlockClick(this::blockClicked);
-    board.setOnKeyPressed(keyEvent -> {
-      logger.info("Key pressed: {}", keyEvent.getText());
-      keyPressed(keyEvent);
-    });
-
-    currentPieceBoard.setOnRotatePieceListener(this::rotatePiece);
-    nextPieceBoard.setOnSwapPieceListener(this::swapPiece);
   }
 
 
@@ -207,6 +205,33 @@ public class ChallengeScene extends BaseScene {
     lives.getStyleClass().add("lives");
     livesBox.getChildren().addAll(livesLabel, lives);
 
+    var highScoreBox = new VBox();
+    highScoreBox.setSpacing(2);
+    highScoreBox.setAlignment(Pos.CENTER);
+    var highScoreLabel = new Text("HIGHSCORE");
+    Text highScore = new Text();
+    try {
+      String firstLine;
+      try (Stream<String> lines = Files.lines(Paths.get("scores.txt"))) {
+        firstLine = lines.findFirst().orElse(null);
+      }
+      if (firstLine != null) {
+        String[] parts = firstLine.split(":");
+        if(parts.length==2){
+          var name = parts[0];
+          var score = Integer.parseInt(parts[1]);
+
+          highScore.setText(name+":"+score);
+        }
+      }
+    } catch (IOException e) {
+      logger.error("There is a problem in the syntax of the score text file");
+    }
+
+    highScoreLabel.getStyleClass().add("heading");
+    highScore.getStyleClass().add("level");
+    highScoreBox.getChildren().addAll(highScoreLabel, highScore);
+
     var levelBox = new VBox();
     levelBox.setSpacing(2);
     levelBox.setAlignment(Pos.CENTER);
@@ -234,34 +259,86 @@ public class ChallengeScene extends BaseScene {
     nextPieceBoard.displayPiece(game.getNextPiece());
     nextPieceBoard.setAlignment(Pos.CENTER);
 
-    game.setCurrentPieceListener(this::currentPiece);
-    game.setNextPieceListener(this::nextPiece);
-    game.setLineClearedListener(this::blockCleared);
-    game.setGameLoop(this::resetTimeBar);
 
-    rightInfoPanel.getChildren().addAll(livesBox, levelBox, multiplierBox, currentPieceBoard, nextPieceBoard);
+
+    rightInfoPanel.getChildren().addAll(livesBox, highScoreBox, levelBox, multiplierBox, currentPieceBoard, nextPieceBoard);
     return rightInfoPanel;
   }
 
+  /**
+   * Create an animated rectangle that tracks the time left to play a piece
+   * @return The animated rectangle
+   */
   private Rectangle createTimeBar(){
     timeBar = new Rectangle();
     timeBar.setWidth(barWidth);
     timeBar.setHeight(20);
     timeBar.setFill(Color.LIGHTGREEN);
 
-    KeyValue start = new KeyValue(timeBar.widthProperty(),barWidth);
-    KeyValue end = new KeyValue(timeBar.widthProperty(), 1);
-    KeyFrame frame = new KeyFrame(Duration.millis(game.getTimerDelay()),start,end);
-    timeline = new Timeline(frame);
+    KeyValue startWidth = new KeyValue(timeBar.widthProperty(), barWidth);
+    KeyValue endWidth = new KeyValue(timeBar.widthProperty(), 1);
+    KeyFrame widthFrame = new KeyFrame(Duration.millis(game.getTimerDelay()), startWidth, endWidth);
+    timeline = new Timeline(widthFrame);
+
+    KeyValue startColor = new KeyValue(timeBar.fillProperty(), Color.GREEN, ci);
+    KeyValue endColor = new KeyValue(timeBar.fillProperty(), Color.RED, ci);
+    KeyFrame colorFrame = new KeyFrame(Duration.millis(game.getTimerDelay()), startColor, endColor);
+    colorTimeline = new Timeline(colorFrame);
+
     timeline.play();
+    colorTimeline.play();
 
     return timeBar;
   }
 
   /**
+   * Resets the timebar
+   */
+  private void resetTimeBar(){
+    if(game.getLives()<0&&!gameover){
+      openScore();
+    }
+
+    timeBar.setWidth(gameWindow.getWidth());
+    barWidth = gameWindow.getWidth();
+    timeBar.setFill(Color.LIGHTGREEN);
+    timeline.stop();
+
+    KeyValue startWidth = new KeyValue(timeBar.widthProperty(), barWidth);
+    KeyValue endWidth = new KeyValue(timeBar.widthProperty(), 1);
+    KeyFrame widthFrame = new KeyFrame(Duration.millis(game.getTimerDelay()), startWidth, endWidth);
+    timeline = new Timeline(widthFrame);
+
+    KeyValue startColor = new KeyValue(timeBar.fillProperty(), Color.GREEN, ci);
+    KeyValue endColor = new KeyValue(timeBar.fillProperty(), Color.RED, ci);
+    KeyFrame colorFrame = new KeyFrame(Duration.millis(game.getTimerDelay()), startColor, endColor);
+    colorTimeline = new Timeline(colorFrame);
+
+    timeline.play();
+    colorTimeline.play();
+  }
+
+  /**
+   * The interpolator used to handle the colour fading from green to red
+   */
+  Interpolator ci = new Interpolator() {
+    @Override
+    protected double curve(double v) {
+      return v;
+    }
+
+    @Override
+    public Object interpolate(Object startValue, Object endValue, double fraction) {
+      Color startColor = (Color) startValue;
+      Color endColor = (Color) endValue;
+      return startColor.interpolate(endColor, fraction);
+    }
+  };
+
+  /**
    * Set up the game object and model
    */
-  private void setupGame() {
+  public void setupGame() {
     logger.info("Starting a new challenge");
 
     //Start a new game
@@ -275,6 +352,24 @@ public class ChallengeScene extends BaseScene {
   public void initialise() {
     logger.info("Initialising Challenge");
     game.start();
+    mainPane.setTop(createTopInfoPanel());
+    mainPane.setLeft(createLeftInfoPanel());
+    mainPane.setRight(createRightInfoPanel());
+    mainPane.setBottom(createTimeBar());
+
+    board.setOnBlockClick(this::blockClicked);
+    board.setOnKeyPressed(keyEvent -> {
+      logger.info("Key pressed: {}", keyEvent.getText());
+      keyPressed(keyEvent);
+    });
+
+    game.setCurrentPieceListener(this::currentPiece);
+    game.setNextPieceListener(this::nextPiece);
+    game.setLineClearedListener(this::blockCleared);
+    game.setGameLoop(this::resetTimeBar);
+
+    currentPieceBoard.setOnRotatePieceListener(this::rotatePiece);
+    nextPieceBoard.setOnSwapPieceListener(this::swapPiece);
   }
 
 
@@ -391,9 +486,6 @@ public class ChallengeScene extends BaseScene {
     }
   }
 
-
-
-
   /**
    * Displays a GamePiece in the current PieceBoard
    *
@@ -422,23 +514,6 @@ public class ChallengeScene extends BaseScene {
     }
   }
 
-  /**
-   * Resets the timebar
-   */
-  private void resetTimeBar(){
-    if(game.getLives()<0&&!gameover){
-      openScore();
-    }
-
-    timeBar.setWidth(gameWindow.getWidth());
-    barWidth = gameWindow.getWidth();
-    timeline.stop();
-    KeyValue start = new KeyValue(timeBar.widthProperty(),barWidth);
-    KeyValue end = new KeyValue(timeBar.widthProperty(), 1);
-    KeyFrame frame = new KeyFrame(Duration.millis(game.getTimerDelay()),start,end);
-    timeline = new Timeline(frame);
-    timeline.play();
-  }
 
   /**
    * End the game and open the score scene
@@ -446,7 +521,7 @@ public class ChallengeScene extends BaseScene {
   private void openScore(){
       gameover=true;
       game.stopTime();
-      gameWindow.startHighscoreScene(game);
+      gameWindow.startNewScoreScene(game);
       Multimedia.stopBackgroundMusic();
       Multimedia.playAudio("gameover.wav");
   }

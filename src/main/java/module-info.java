@@ -5,7 +5,8 @@ module uk.ac.soton.comp1206 {
     requires javafx.media;
     requires org.apache.logging.log4j;
     requires nv.websocket.client;
-    opens uk.ac.soton.comp1206.ui to javafx.fxml;
+  requires java.desktop;
+  opens uk.ac.soton.comp1206.ui to javafx.fxml;
     exports uk.ac.soton.comp1206;
     exports uk.ac.soton.comp1206.ui;
     exports uk.ac.soton.comp1206.network;
@@ -13,4 +14,5 @@ module uk.ac.soton.comp1206 {
     exports uk.ac.soton.comp1206.event;
     exports uk.ac.soton.comp1206.component;
     exports uk.ac.soton.comp1206.game;
+  opens uk.ac.soton.comp1206.component to javafx.fxml;
 }

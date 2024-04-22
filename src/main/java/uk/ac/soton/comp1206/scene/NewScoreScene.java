@@ -1,6 +1,5 @@
 package uk.ac.soton.comp1206.scene;
 
-
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -15,7 +14,11 @@ import uk.ac.soton.comp1206.game.Game;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 
+/**
+ * THe NewScoreScene
+ */
 public class NewScoreScene extends BaseScene{
+
   private static final Logger logger = LogManager.getLogger(uk.ac.soton.comp1206.scene.ScoresScene.class);
 
   /**
@@ -35,11 +38,11 @@ public class NewScoreScene extends BaseScene{
   }
 
   /**
-   * Build the layout for the high score scene
+   * Build the layout for the new score scene
    */
   @Override
   public void build() {
-    logger.info("Building " + this.getClass().getName());
+    logger.info("Building {}", this.getClass().getName());
     root = new GamePane(gameWindow.getWidth(),gameWindow.getHeight());
 
     var scorePane = new StackPane();
@@ -75,9 +78,6 @@ public class NewScoreScene extends BaseScene{
     });
 
   }
-
-
-
 
   /**
    * Initialize the NewScoreScene
