@@ -32,6 +32,7 @@ import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 import uk.ac.soton.comp1206.component.ScoreList;
+import uk.ac.soton.comp1206.utilities.ResourceBundleHolder;
 
 /**
  * The ScoreScene
@@ -138,11 +139,11 @@ public class ScoresScene extends BaseScene{
 
 
 
-    var localHeading = new Text("Local Scores");
+    var localHeading = new Text(ResourceBundleHolder.getResourceBundle().getString("localScore"));
     localHeading.getStyleClass().add("heading");
     localHeading.setTextAlignment(TextAlignment.LEFT);
 
-    var onlineHeading = new Text("Online Scores");
+    var onlineHeading = new Text(ResourceBundleHolder.getResourceBundle().getString("onlineScore"));
     onlineHeading.getStyleClass().add("heading");
     onlineHeading.setTextAlignment(TextAlignment.RIGHT);
 

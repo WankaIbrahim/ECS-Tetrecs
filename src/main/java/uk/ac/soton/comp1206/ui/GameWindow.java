@@ -20,6 +20,7 @@ import uk.ac.soton.comp1206.scene.MenuScene;
 import uk.ac.soton.comp1206.scene.MultiplayerScene;
 import uk.ac.soton.comp1206.scene.NewScoreScene;
 import uk.ac.soton.comp1206.scene.ScoresScene;
+import uk.ac.soton.comp1206.scene.SettingScene;
 
 /**
  * The GameWindow is the single window for the game where everything takes place. To move between screens in the game,
@@ -118,7 +119,7 @@ public class GameWindow {
     }
 
     /**
-     * Start the NewScoreScene
+     * Display the NewScoreScene
      * @param game THe game associated with the NewScoreScene
      */
     public void startNewScoreScene(Game game) {
@@ -130,6 +131,13 @@ public class GameWindow {
      */
     public void startHowToPlayScene(){
         loadScene(new HowToPlayScene(this));
+    }
+
+    /**
+     * Display the SettingScene
+     */
+    public void startSettingMenuScene(){
+        loadScene(new SettingScene(this));
     }
 
     /**

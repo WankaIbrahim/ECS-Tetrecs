@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.network.Communicator;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
+import uk.ac.soton.comp1206.utilities.ResourceBundleHolder;
 
 /**
  * The Multiplayer Lobby
@@ -50,6 +51,11 @@ public class LobbyScene extends BaseScene {
    * True when in a channel false otherwise
    */
   private Boolean inChannel = false;
+
+  /**
+   * True if host of the channel
+   */
+  private Boolean isHost = false;
 
   /**
    * Holds the messages received and sent in the chat box
@@ -112,8 +118,8 @@ public class LobbyScene extends BaseScene {
    */
   private VBox createLeftBox() {
     var textField = new TextField();
-    textField.setPromptText("HOST NEW GAME");
-    var sendButton = new Button("Send");
+    textField.setPromptText(ResourceBundleHolder.getResourceBundle().getString("hostNewGame"));
+    var sendButton = new Button(ResourceBundleHolder.getResourceBundle().getString("send"));
     sendButton.setOnAction(e-> {
       communicator.send("CREATE "+textField.getText());
       communicator.send("LIST");
@@ -129,7 +135,7 @@ public class LobbyScene extends BaseScene {
     var messageBox = new HBox(textField,sendButton);
 
     channelList = new VBox();
-    var title = new Text("OPEN CHANNELS");
+    var title = new Text(ResourceBundleHolder.getResourceBundle().getString("openChannels"));
     title.getStyleClass().add("title");
     channelList.getChildren().add(title);
 
@@ -150,7 +156,7 @@ public class LobbyScene extends BaseScene {
    */
   private VBox createRightBox(){
     var messageField = new TextField();
-    messageField.setPromptText("Send Message");
+    messageField.setPromptText(ResourceBundleHolder.getResourceBundle().getString("sendMessage"));
     messageField.setOnKeyPressed(e->{
       if(e.getCode()==KeyCode.ENTER){
         if(Objects.equals(messageField.getText(), "/nick")){
@@ -191,13 +197,13 @@ public class LobbyScene extends BaseScene {
       }
     });
 
-    var sendButton = new Button("SEND");
+    var sendButton = new Button(ResourceBundleHolder.getResourceBundle().getString("send"));
     sendButton.setOnAction(e->{
       communicator.send("MSG "+ messageField.getText());
       messageField.clear();
     });
 
-    var startButton = new Button("START GAME");
+    var startButton = new Button(ResourceBundleHolder.getResourceBundle().getString("startGame"));
     startButton.setOnAction(e->{
       communicator.send("START");
       gameWindow.startMultiplayerGame(communicator);
@@ -217,7 +223,7 @@ public class LobbyScene extends BaseScene {
     if (communication.split(" ")[0].equals("CHANNELS")&&!inChannel) {
       channelList.getChildren().clear();
       logger.info("Channel List Cleared");
-      var title = new Text("OPEN CHANNELS");
+      var title = new Text(ResourceBundleHolder.getResourceBundle().getString("openChannels"));
       title.getStyleClass().add("title");
       channelList.getChildren().add(title);
       logger.info("Title added");
@@ -238,7 +244,7 @@ public class LobbyScene extends BaseScene {
     if (communication.split(" ")[0].equals("USERS")) {
       userList.getChildren().clear();
       logger.info("User List Cleared");
-      var userTitle = new Text("USERS");
+      var userTitle = new Text(ResourceBundleHolder.getResourceBundle().getString("users"));
       userTitle.getStyleClass().add("title");
       userList.getChildren().add(userTitle);
       logger.info("Title added");
@@ -259,7 +265,7 @@ public class LobbyScene extends BaseScene {
       mainPane.setRight(createRightBox());
       channelList.getChildren().clear();
       logger.info("Channel List Cleared");
-      var channelTitle = new Text("CURRENT CHANNEL");
+      var channelTitle = new Text(ResourceBundleHolder.getResourceBundle().getString("currentChannel"));
       channelTitle.getStyleClass().add("title");
       channelList.getChildren().add(channelTitle);
       logger.info("Title added");

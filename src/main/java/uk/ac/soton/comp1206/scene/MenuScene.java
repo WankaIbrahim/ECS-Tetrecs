@@ -1,6 +1,8 @@
 package uk.ac.soton.comp1206.scene;
 
+import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.geometry.Insets;
@@ -20,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 import uk.ac.soton.comp1206.utilities.Multimedia;
+import uk.ac.soton.comp1206.utilities.ResourceBundleHolder;
 
 /**
  * The main menu of the game. Provides a gateway to the rest of the game.
@@ -27,6 +30,8 @@ import uk.ac.soton.comp1206.utilities.Multimedia;
 public class MenuScene extends BaseScene {
 
     private static final Logger logger = LogManager.getLogger(MenuScene.class);
+
+    ResourceBundle bundle = ResourceBundleHolder.getResourceBundle();
 
     /**
      * Create a new menu scene
@@ -86,30 +91,28 @@ public class MenuScene extends BaseScene {
         var menuItemsBox = new VBox();
         menuItemsBox.setAlignment(Pos.CENTER);
 
-        var singlePlayer = new Text("Single Player");
+        var singlePlayer = new Text(bundle.getString("singlePlayer"));
         singlePlayer.getStyleClass().add("menuItem");
 
-        var multiPlayer = new Text("Multi Player");
+        var multiPlayer = new Text(bundle.getString("multiPlayer"));
         multiPlayer.getStyleClass().add("menuItem");
 
-        var howToPlay = new Text("How to Play");
+        var howToPlay = new Text(bundle.getString("howToPlay"));
         howToPlay.getStyleClass().add("menuItem");
 
-        var exit = new Text("Exit");
+        var settingScene =  new Text(bundle.getString("settings"));
+        settingScene.getStyleClass().add("menuItem");
+
+        var exit = new Text(bundle.getString("exit"));
         exit.getStyleClass().add("menuItem");
 
-        menuItemsBox.getChildren().addAll(singlePlayer,multiPlayer,howToPlay,exit);
+        menuItemsBox.getChildren().addAll(singlePlayer,multiPlayer,howToPlay, settingScene,exit);
         mainPane.setCenter(menuItemsBox);
-
-        //Bind the button action to the startGame method in the menu
-        singlePlayer.setOnMouseEntered(e-> singlePlayer.getStyleClass().add("menuItem:hover"));
-        multiPlayer.setOnMouseEntered(e-> multiPlayer.getStyleClass().add("menuItem:hover"));
-        howToPlay.setOnMouseEntered(e-> howToPlay.getStyleClass().add("menuItem:hover"));
-        exit.setOnMouseEntered(e-> exit.getStyleClass().add("menuItem:hover"));
 
         singlePlayer.setOnMouseClicked(this::startGame);
         multiPlayer.setOnMouseClicked(this::startMultiPlayer);
-        howToPlay.setOnMouseClicked(this::displayHowToPlay);
+        howToPlay.setOnMouseClicked(this::startHowToPlayScene);
+        settingScene.setOnMouseClicked(this::startSettingScene);
         exit.setOnMouseClicked(e-> System.exit(0));
     }
 
@@ -138,8 +141,12 @@ public class MenuScene extends BaseScene {
     /**
      *Start the howToPlayscene
      */
-    private void displayHowToPlay(MouseEvent event){
+    private void startHowToPlayScene(MouseEvent event){
         gameWindow.startHowToPlayScene();
     }
 
+    /**
+     * Start SettingScene
+     */
+    private void startSettingScene(MouseEvent event){gameWindow.startSettingMenuScene();}
 }

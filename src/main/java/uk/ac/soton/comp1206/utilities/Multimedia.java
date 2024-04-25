@@ -1,6 +1,7 @@
 package uk.ac.soton.comp1206.utilities;
 
 import java.util.Objects;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 public class Multimedia {
 
   private static final Logger logger = LogManager.getLogger(Multimedia.class);
+
+  public static SimpleDoubleProperty volume = new SimpleDoubleProperty(1);
 
   /**
    * Media player used for audio
@@ -32,6 +35,7 @@ public class Multimedia {
     String toPlay = Objects.requireNonNull(Multimedia.class.getResource("/sounds/" + audioPath))
         .toExternalForm();
     audioPlayer = new MediaPlayer(new Media(toPlay));
+    audioPlayer.setVolume(volume.get());
     audioPlayer.play();
 
     logger.info("Playing audio {}", audioPath);
@@ -54,6 +58,7 @@ public class Multimedia {
         .toExternalForm();
     musicPlayer = new MediaPlayer(new Media(toPlay));
     musicPlayer.cycleCountProperty().set(Integer.MAX_VALUE);
+    musicPlayer.setVolume(volume.get());
     musicPlayer.play();
     logger.info("Playing music {}", audioPath);
   }
@@ -64,5 +69,12 @@ public class Multimedia {
   public static void stopBackgroundMusic() {
     musicPlayer.stop();
   }
+
+  public static void resetVolume(){
+    musicPlayer.setVolume(volume.get());
+    audioPlayer.setVolume(volume.get());
+  }
+
+  public static SimpleDoubleProperty volumeProperty() {return volume;}
 
 }

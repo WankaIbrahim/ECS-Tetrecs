@@ -33,6 +33,7 @@ import uk.ac.soton.comp1206.game.GamePiece;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
 import uk.ac.soton.comp1206.utilities.Multimedia;
+import uk.ac.soton.comp1206.utilities.ResourceBundleHolder;
 
 /**
  * The Single Player challenge scene.
@@ -150,7 +151,7 @@ public class ChallengeScene extends BaseScene {
     topInfoPanel.toBack();
     topInfoPanel.alignmentProperty().set(Pos.BOTTOM_CENTER);
 
-    var title = new Text("Challenge Scene");
+    var title = new Text(ResourceBundleHolder.getResourceBundle().getString("challengeScene"));
     title.getStyleClass().add("title");
 
     topInfoPanel.getChildren().add(title);
@@ -171,16 +172,7 @@ public class ChallengeScene extends BaseScene {
     leftInfoPanel.setPrefWidth(80);
     leftInfoPanel.setAlignment(Pos.TOP_LEFT);
 
-    var scoreBox = new VBox();
-    scoreBox.setAlignment(Pos.TOP_CENTER);
-    var scoreLabel = new Text("SCORE");
-    var score = new Text();
-    score.textProperty().bind(game.scoreProperty().asString());
-    scoreLabel.getStyleClass().add("heading");
-    score.getStyleClass().add("score");
-    scoreBox.getChildren().addAll(scoreLabel, score);
-
-    leftInfoPanel.getChildren().addAll(scoreBox);
+    leftInfoPanel.getChildren().addAll(createScore());
     return leftInfoPanel;
   }
 
@@ -195,20 +187,22 @@ public class ChallengeScene extends BaseScene {
     rightInfoPanel.setSpacing(10);
     rightInfoPanel.setAlignment(Pos.TOP_CENTER);
 
+    //Create a VBox to hold a header and a text bound to the lives property
     var livesBox = new VBox();
     livesBox.setSpacing(2);
     livesBox.setAlignment(Pos.CENTER);
-    var livesLabel = new Text("LIVES");
+    var livesLabel = new Text(ResourceBundleHolder.getResourceBundle().getString("lives"));
     var lives = new Text();
     lives.textProperty().bind(game.livesProperty().asString());
     livesLabel.getStyleClass().add("heading");
     lives.getStyleClass().add("lives");
     livesBox.getChildren().addAll(livesLabel, lives);
 
+    //Create a VBox to hold a header and a text which is the first line of the local score file
     var highScoreBox = new VBox();
     highScoreBox.setSpacing(2);
     highScoreBox.setAlignment(Pos.CENTER);
-    var highScoreLabel = new Text("HIGHSCORE");
+    var highScoreLabel = new Text(ResourceBundleHolder.getResourceBundle().getString("highscore"));
     Text highScore = new Text();
     try {
       String firstLine;
@@ -227,25 +221,26 @@ public class ChallengeScene extends BaseScene {
     } catch (IOException e) {
       logger.error("There is a problem in the syntax of the score text file");
     }
-
     highScoreLabel.getStyleClass().add("heading");
     highScore.getStyleClass().add("level");
     highScoreBox.getChildren().addAll(highScoreLabel, highScore);
 
+    //Create a VBox to hold a header and a text bound to the level property
     var levelBox = new VBox();
     levelBox.setSpacing(2);
     levelBox.setAlignment(Pos.CENTER);
-    var levelLabel = new Text("LEVEL");
+    var levelLabel = new Text(ResourceBundleHolder.getResourceBundle().getString("level"));
     var level = new Text();
     level.textProperty().bind(game.levelProperty().asString());
     levelLabel.getStyleClass().add("heading");
     level.getStyleClass().add("level");
     levelBox.getChildren().addAll(levelLabel, level);
 
+    //Create a VBox to hold a header and a text bound to the multiplier property
     var multiplierBox = new VBox();
     multiplierBox.setSpacing(2);
     multiplierBox.setAlignment(Pos.CENTER);
-    var multiplierLabel = new Text("MULTIPLIER");
+    var multiplierLabel = new Text(ResourceBundleHolder.getResourceBundle().getString("multiplier"));
     var multiplier = new Text();
     multiplier.textProperty().bind(game.multiplierProperty().asString());
     multiplierLabel.getStyleClass().add("heading");
@@ -265,6 +260,20 @@ public class ChallengeScene extends BaseScene {
     return rightInfoPanel;
   }
 
+  protected VBox createScore(){
+    //Create a VBox to hold a header and a text bound to the score property
+    var scoreBox = new VBox();
+    scoreBox.setAlignment(Pos.TOP_CENTER);
+    var scoreLabel = new Text(ResourceBundleHolder.getResourceBundle().getString("score"));
+    var score = new Text();
+    score.textProperty().bind(game.scoreProperty().asString());
+    scoreLabel.getStyleClass().add("heading");
+    score.getStyleClass().add("score");
+    scoreBox.getChildren().addAll(scoreLabel, score);
+
+    return scoreBox;
+  }
+
   /**
    * Create an animated rectangle that tracks the time left to play a piece
    * @return The animated rectangle
@@ -275,11 +284,13 @@ public class ChallengeScene extends BaseScene {
     timeBar.setHeight(20);
     timeBar.setFill(Color.LIGHTGREEN);
 
+    //Create a timeline associated with the width of the time bar
     KeyValue startWidth = new KeyValue(timeBar.widthProperty(), barWidth);
     KeyValue endWidth = new KeyValue(timeBar.widthProperty(), 1);
     KeyFrame widthFrame = new KeyFrame(Duration.millis(game.getTimerDelay()), startWidth, endWidth);
     timeline = new Timeline(widthFrame);
 
+    //Create a timeline associated with the colour of the time bar
     KeyValue startColor = new KeyValue(timeBar.fillProperty(), Color.GREEN, ci);
     KeyValue endColor = new KeyValue(timeBar.fillProperty(), Color.RED, ci);
     KeyFrame colorFrame = new KeyFrame(Duration.millis(game.getTimerDelay()), startColor, endColor);
@@ -368,7 +379,7 @@ public class ChallengeScene extends BaseScene {
     game.setLineClearedListener(this::blockCleared);
     game.setGameLoop(this::resetTimeBar);
 
-    currentPieceBoard.setOnRotatePieceListener(this::rotatePiece);
+    currentPieceBoard.setOnRotatePieceListener(this::rotatePieceRight);
     nextPieceBoard.setOnSwapPieceListener(this::swapPiece);
   }
 
@@ -388,10 +399,17 @@ public class ChallengeScene extends BaseScene {
   }
 
   /**
-   * Handles the rotating of a piece held in the current piece board
+   * Handles the rotating of a piece held in the current piece board to the right
    */
-  private void rotatePiece() {
+  private void rotatePieceRight() {
     currentPieceBoard.rotatePieceRight();
+  }
+
+  /**
+   * Handles the rotating of a piece held in the current piece board to the left
+   */
+  private void rotatePieceLeft() {
+    currentPieceBoard.rotatePieceLeft();
   }
 
   /**
@@ -475,13 +493,11 @@ public class ChallengeScene extends BaseScene {
         break;
 
       case Q, Z, OPEN_BRACKET:
-        rotatePiece();
+        rotatePieceRight();
         break;
 
       case E, C, CLOSE_BRACKET:
-        rotatePiece();
-        rotatePiece();
-        rotatePiece();
+        rotatePieceLeft();
         break;
     }
   }

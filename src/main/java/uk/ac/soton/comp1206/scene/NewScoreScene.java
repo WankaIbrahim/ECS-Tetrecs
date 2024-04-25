@@ -1,5 +1,6 @@
 package uk.ac.soton.comp1206.scene;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.game.Game;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
+import uk.ac.soton.comp1206.utilities.ResourceBundleHolder;
 
 /**
  * THe NewScoreScene
@@ -55,12 +57,13 @@ public class NewScoreScene extends BaseScene{
     scorePane.getChildren().add(mainPane);
     mainPane.setFocusTraversable(true);
 
-    var text = new Text("Enter your Name");
+    var text = new Text(ResourceBundleHolder.getResourceBundle().getString("enterYourName"));
     text.getStyleClass().add("heading");
     var enterName = new TextField();
     enterName.setMaxWidth(150);
+    Platform.runLater(enterName::requestFocus);
 
-    var title = new Text("GAME OVER");
+    var title = new Text(ResourceBundleHolder.getResourceBundle().getString("gameOver"));
     title.getStyleClass().add("massivetitle");
     var titleBox  = new HBox(title);
     titleBox.setAlignment(Pos.CENTER);

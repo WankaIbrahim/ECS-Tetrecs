@@ -159,10 +159,21 @@ public class PieceBoard extends GameBoard {
   }
 
   /**
-   * Rotate the piece held in the PieceBoard
+   * Rotate the piece held in the PieceBoard to the right
    */
   public void rotatePieceRight() {
     Multimedia.playAudio("rotate.wav");
+    piece.rotate();
+    displayPiece(piece);
+  }
+
+  /**
+   * Rotate the piece held in the PieceBoard to the left
+   */
+  public void rotatePieceLeft() {
+    Multimedia.playAudio("rotate.wav");
+    piece.rotate();
+    piece.rotate();
     piece.rotate();
     displayPiece(piece);
   }

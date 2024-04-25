@@ -227,6 +227,9 @@ public class Game {
    * Increments the level when necessary
    */
   private void level() {
+    //To calculate the level, I get the length of the level as a string if it is less than 4,
+    // then I know that the level must be 1,
+    // if its is greater than 4 then I get the substring of the score as a text without the last 3 digits
     var scoreAsString = String.valueOf(getScore());
     if (scoreAsString.length() < 4) {
       setLevel(0);
@@ -366,9 +369,10 @@ public class Game {
     logger.info("Checking if piece {} can be played at {} {}", currentPiece, placeX, placeY);
     if (grid.canPlayPiece(currentPiece, placeX, placeY)) {
       grid.playPiece(currentPiece, placeX, placeY);
+
+      //After the piece has been played, put the next piece as the current piece, create a new next piece, restart the timer and play the audio
       nextPiece();
       startTimeline();
-
       Multimedia.playAudio("place.mp3");
     } else {
       logger.error("Unable to place piece: {} at {} {}", currentPiece, placeX, placeY);

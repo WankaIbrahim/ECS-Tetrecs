@@ -10,12 +10,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javax.swing.undo.AbstractUndoableEdit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.soton.comp1206.component.PieceBoard;
 import uk.ac.soton.comp1206.game.GamePiece;
 import uk.ac.soton.comp1206.ui.GamePane;
 import uk.ac.soton.comp1206.ui.GameWindow;
+import uk.ac.soton.comp1206.utilities.ResourceBundleHolder;
 
 /**
  * The scene with the instructions and gamePieces
@@ -56,10 +58,10 @@ public class HowToPlayScene extends BaseScene {
     mainPane.setOnKeyPressed(e-> gameWindow.startMenu(true));
 
 
-    var mainTitle = new Text("Instructions");
+    var mainTitle = new Text(ResourceBundleHolder.getResourceBundle().getString("instructions"));
     mainTitle.getStyleClass().add("heading");
 
-    var brief = new Text("TetraECS is a fast-paced gravity-free block placement game, where you must survive by clearing rows through careful placement of the\nupcoming blocks before the time runs out. Lose all 3 lives and you're destroyed!! ");
+    var brief = new Text(ResourceBundleHolder.getResourceBundle().getString("gameDescription"));
     brief.textAlignmentProperty().set(TextAlignment.CENTER);
     brief.getStyleClass().add("instructions");
 
@@ -68,7 +70,7 @@ public class HowToPlayScene extends BaseScene {
     instructions.setFitHeight(330);
     instructions.setFitWidth(530);
 
-    var subTitle = new Text("Game Pieces");
+    var subTitle = new Text(ResourceBundleHolder.getResourceBundle().getString("gamePieces"));
     subTitle.getStyleClass().add("heading");
 
     var firstRow = new HBox();
